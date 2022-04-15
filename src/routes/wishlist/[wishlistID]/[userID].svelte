@@ -25,6 +25,7 @@
       return
     }
     wishlist = await dbResponse.json()
+    console.log(wishlist)
   })
 </script>
 
@@ -38,8 +39,10 @@
 
 {#if wishlist}
   {#each wishlist as wish}
-    <img src="{wish.cover}" alt="{wish.title}" />
-    <p>{wish.title}</p>
-    <h3>{wish.price}</h3>
+    <a href="{wish.link}">
+      <img src="{wish.cover}" alt="{wish.title}" />
+      <p>{wish.title}</p>
+      <h3>{wish.price}</h3>
+    </a>
   {/each}
 {/if}
