@@ -1,0 +1,77 @@
+<script lang="ts">
+  import { onMount } from 'svelte'
+
+  let message = 'Logging in...'
+
+  onMount(async () => {
+    if (!window.localStorage.getItem('userID')) {
+      let values: Uint32Array = new Uint32Array(30);
+      await window.crypto.getRandomValues(values)
+
+      let userKey: string = ''
+      for (let value of values) {
+        userKey = userKey + value.toString()
+      }
+
+      let userID = await window.crypto.randomUUID()
+
+      let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userID,
+          userKey
+        })
+      })
+
+      if (response.status !== 204) {
+        message = 'Login failed! Try refreshing this page or clearing localStorage.'
+        console.log(await response.text())
+        return
+      } else {
+        window.localStorage.setItem('userID', userID)
+        window.localStorage.setItem('userKey', userKey)
+      }
+    } else {
+      let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/confirm_user', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          userID: window.localStorage.getItem('userID'),
+          userKey: window.localStorage.getItem('userKey')
+        })
+      })
+
+      if (response.status !== 204) {
+        message = 'Login failed! Try refreshing this page or clearing localStorage.'
+        console.log(await response.text())
+        return
+      }
+    }
+
+    if (window.location.hash) {
+      window.location.replace(window.location.hash)
+    } else {
+      window.location.replace('/dashboard')
+    }
+  })
+</script>
+
+<style global>
+  html {
+    background-color: lightcoral;
+  }
+
+  h1 {
+    width: 100%;
+    text-align: center;
+    margin-top: 10vh;
+    font-family: sans-serif;
+  }
+</style>
+
+<h1>{message}</h1>
