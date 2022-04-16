@@ -1,9 +1,11 @@
 <script lang="ts">
   import { onMount } from 'svelte'
+  import { goto, prefetch } from '$app/navigation'
 
   let message = 'Logging in...'
 
   onMount(async () => {
+    prefetch('/dashboard')
     if (!window.localStorage.getItem('userID')) {
       let values: Uint32Array = new Uint32Array(30);
       await window.crypto.getRandomValues(values)
@@ -54,9 +56,9 @@
     }
 
     if (window.location.hash) {
-      window.location.replace(window.location.hash)
+      goto(window.location.hash)
     } else {
-      window.location.replace('/dashboard')
+      goto('/dashboard')
     }
   })
 </script>
