@@ -10,11 +10,7 @@
   })
 </script>
 
-<style global>
-  html {
-    background-color: lightcoral;
-  }
-
+<style>
   h1 {
     width: 100%;
     text-align: center;

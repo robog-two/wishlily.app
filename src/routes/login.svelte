@@ -6,7 +6,7 @@
 
   onMount(async () => {
     prefetch('/dashboard')
-    if (!window.localStorage.getItem('userID')) {
+    if (!window.localStorage.getItem('userId')) {
       let values: Uint32Array = new Uint32Array(30);
       await window.crypto.getRandomValues(values)
 
@@ -15,7 +15,7 @@
         userKey = userKey + value.toString()
       }
 
-      let userID = await window.crypto.randomUUID()
+      let userId = await window.crypto.randomUUID()
 
       let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_user', {
         method: 'POST',
@@ -23,7 +23,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userID,
+          userId,
           userKey
         })
       })
@@ -33,7 +33,7 @@
         console.log(await response.text())
         return
       } else {
-        window.localStorage.setItem('userID', userID)
+        window.localStorage.setItem('userId', userId)
         window.localStorage.setItem('userKey', userKey)
       }
     } else {
@@ -43,7 +43,7 @@
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          userID: window.localStorage.getItem('userID'),
+          userId: window.localStorage.getItem('userId'),
           userKey: window.localStorage.getItem('userKey')
         })
       })
@@ -63,11 +63,7 @@
   })
 </script>
 
-<style global>
-  html {
-    background-color: lightcoral;
-  }
-
+<style>
   h1 {
     width: 100%;
     text-align: center;

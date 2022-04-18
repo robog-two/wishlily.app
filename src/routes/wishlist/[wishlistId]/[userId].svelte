@@ -1,17 +1,45 @@
 <script lang="ts">
   import { page } from '$app/stores'
-  const { wishlistID, userID } = $page.params
+  const { wishlistId, userId } = $page.params
+  import logo from '../../../images/logo.svg'
   let wishlist
 
   import { onMount } from 'svelte'
   let itemURL = ''
   let isLoggedIn = false
   let statusMessage
+  let title, address, color
 
   onMount(async () => {
-    isLoggedIn = (userID === await window.localStorage.getItem('userID'))
+    isLoggedIn = (userId === await window.localStorage.getItem('userId'))
+    loadWishlistInfo()
     reloadWishlist()
   })
+
+  async function loadWishlistInfo() {
+    statusMessage = 'Loading ...'
+    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        wishlistId,
+        userId
+      })
+    })
+    if (dbResponse.status < 200 || dbResponse.status >= 400) {
+      statusMessage = 'Error loading wishlist information!'
+      console.log(await dbResponse.json())
+      return
+    }
+    const info = await dbResponse.json()
+    title = info.title
+    address = info.address
+    color = info.color
+    console.log(wishlist)
+    statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
+  }
 
   async function reloadWishlist() {
     statusMessage = 'Loading ...'
@@ -21,17 +49,18 @@
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        wishlistID,
-        userID
+        wishlistId,
+        userId
       })
     })
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
+      statusMessage = 'Error loading wishlist!'
       console.log(await dbResponse.json())
       return
     }
     wishlist = await dbResponse.json()
     console.log(wishlist)
-    statusMessage = undefined
+    statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
   }
 
   async function addProduct() {
@@ -52,8 +81,8 @@
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        wishlistID,
-        userID,
+        wishlistId,
+        userId,
         userKey: window.localStorage.getItem('userKey'),
         ...product
       })
@@ -64,7 +93,7 @@
       return
     }
 
-    statusMessage = undefined
+    statusMessage = (statusMessage === 'Adding item...') ? undefined : statusMessage
     reloadWishlist()
   }
 
@@ -78,8 +107,8 @@
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        wishlistID,
-        userID,
+        wishlistId,
+        userId,
         userKey: window.localStorage.getItem('userKey'),
         id: productId
       })
@@ -92,36 +121,51 @@
 
     statusMessage = undefined
     reloadWishlist()
+    return false
   }
 </script>
 
-{#if statusMessage}
-  <span>{ statusMessage ?? '' }</span>
-{/if}
+<div style="background-color: {color}">
+  {#if statusMessage}
+    <span>{ statusMessage ?? '' }</span>
+  {/if}
 
-{#if isLoggedIn}
-  <form on:submit="{addProduct}" action="#">
-    <span>Add Product:</span>
-    <input bind:value="{itemURL}" />
-    <input type="submit" style="display: none" />
-  </form>
-{/if}
+  <a href="/dashboard">
+    <img src="{logo}" alt="Back to home" />
+  </a>
 
-{#if wishlist}
-  {#each wishlist as wish}
-    {#if isLoggedIn}
-      <button on:click="{() => {deleteProduct(wish.id)}}">Delete</button>
-    {/if}
-    <a href="{wish.link}">
-      <span>{wish.price}</span>
-      {#if wish.link.includes('amazon.com')}
-        <span>Amazon</span>
+  {#if title}
+    <h1>{title}</h1>
+  {/if}
+
+  {#if address}
+    <h3>{address}</h3>
+  {/if}
+
+  {#if isLoggedIn}
+    <form on:submit|preventDefault="{addProduct}">
+      <span>Add Product:</span>
+      <input bind:value="{itemURL}" />
+      <input type="submit" style="display: none" />
+    </form>
+  {/if}
+
+  {#if wishlist}
+    {#each wishlist as wish}
+      {#if isLoggedIn}
+        <button on:click="{() => {deleteProduct(wish.id)}}">Delete</button>
       {/if}
-      {#if wish.link.includes('etsy.com')}
-        <span>Etsy</span>
-      {/if}
-      <img src="{wish.cover}" alt="{wish.title}" />
-      <p>{wish.title}</p>
-    </a>
-  {/each}
-{/if}
+      <a href="{wish.link}">
+        <span>{wish.price}</span>
+        {#if wish.link.includes('amazon.com')}
+          <span>Amazon</span>
+        {/if}
+        {#if wish.link.includes('etsy.com')}
+          <span>Etsy</span>
+        {/if}
+        <img src="{wish.cover}" alt="{wish.title}" />
+        <p>{wish.title}</p>
+      </a>
+    {/each}
+  {/if}
+</div>
