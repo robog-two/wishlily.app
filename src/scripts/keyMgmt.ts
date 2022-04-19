@@ -17,7 +17,7 @@ async function getKey(): Promise<CryptoKey> {
     JSON.parse(
       Buffer.from(window.location.hash || window.localStorage.getItem('encryptionKey'), 'base64').toString()
     ),
-    { name: 'AES-GCM' },
+    { name: 'AES-CBC', length: 128 },
     true,
     ['encrypt', 'decrypt']
   )
@@ -25,14 +25,13 @@ async function getKey(): Promise<CryptoKey> {
 
 export async function decrypt(text: string): Promise<string> {
   if (!text.startsWith('===client_side_enc===')) {
-    console.log(await encrypt('text'))
+    console.log(await encrypt(text))
     return text
   } else {
     const encrypted = Buffer.from(text.slice(21), 'base64')
-    const iv = new Uint8Array(96)
-    await window.crypto.getRandomValues(iv)
-    return await new TextDecoder('utf-8').decode(await window.crypto.subtle.decrypt(
-      { name: 'AES-GSM', iv },
+    const iv = window.crypto.getRandomValues(new Uint8Array(16))
+    return new TextDecoder('utf-8').decode(await window.crypto.subtle.decrypt(
+      { name: 'AES-CBC', length: 128, iv },
       await getKey(),
       encrypted
     ))
@@ -40,10 +39,9 @@ export async function decrypt(text: string): Promise<string> {
 }
 
 export async function encrypt(text: string): Promise<string> {
-  const iv = window.crypto.getRandomValues(new Uint8Array(12))
-  console.log(iv)
+  const iv = window.crypto.getRandomValues(new Uint8Array(16))
   return '===client_side_enc===' + Buffer.from(await window.crypto.subtle.encrypt(
-    { name: 'AES-GSM', iv },
+    { name: 'AES-CBC', length: 128, iv },
     await getKey(),
     new TextEncoder().encode(text)
   )).toString('base64')

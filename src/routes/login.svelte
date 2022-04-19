@@ -3,14 +3,15 @@
   import { goto, prefetch } from '$app/navigation'
   import { Buffer } from 'buffer/'
 
-  let message = 'Logging in...'
+  let message = ''
 
   onMount(async () => {
     prefetch('/dashboard')
 
     if (!window.localStorage.getItem('encryptionKey')) {
+      message = 'Encrypting...'
       const encryptionKey = await window.crypto.subtle.generateKey({
-        name: 'AES-GCM',
+        name: 'AES-CBC',
         length: 128
       }, true, ['encrypt', 'decrypt'])
 
@@ -25,6 +26,7 @@
     }
 
     if (!window.localStorage.getItem('userId')) {
+      message = 'Logging in...'
       let values: Uint32Array = new Uint32Array(30);
       await window.crypto.getRandomValues(values)
 
@@ -55,6 +57,7 @@
         window.localStorage.setItem('userKey', userKey)
       }
     } else {
+      message = 'Refreshing login...'
       let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/confirm_user', {
         method: 'POST',
         headers: {
@@ -73,8 +76,8 @@
       }
     }
 
-    if (window.location.hash) {
-      goto(window.location.hash)
+    if (window.location.hash?.startsWith('https://wishlily.app')) {
+      goto(window.location.hash.slice(20))
     } else {
       goto('/dashboard')
     }
