@@ -1,5 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
+  import { checkLogin, encrypt } from '../scripts/keyMgmt';
   import { onMount } from 'svelte';
 
   let statusMessage
@@ -7,10 +8,7 @@
   let listName, listAddress, listColor
 
   onMount(async () => {
-    if (!window.localStorage.getItem('userId')) {
-      goto('/')
-    }
-
+    checkLogin()
     reloadWishlists()
   })
 
@@ -56,7 +54,7 @@
           userKey: window.localStorage.getItem('userKey'),
           title: tempListName,
           color: tempListColor,
-          address: tempListAddress
+          address: await encrypt(tempListAddress)
         })
       })
       if (dbResponse.status < 200 || dbResponse.status >= 400) {
@@ -87,7 +85,7 @@
 
 {#if wishlists}
   {#each wishlists as wishlist}
-    <a href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}`}" style="display: block; background-color: {wishlist.color}">
+    <a href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
       <p>{wishlist.title}</p>
     </a>
   {/each}

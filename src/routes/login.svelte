@@ -1,11 +1,29 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { goto, prefetch } from '$app/navigation'
+  import { Buffer } from 'buffer/'
 
   let message = 'Logging in...'
 
   onMount(async () => {
     prefetch('/dashboard')
+
+    if (!window.localStorage.getItem('encryptionKey')) {
+      const encryptionKey = await window.crypto.subtle.generateKey({
+        name: 'AES-GCM',
+        length: 128
+      }, true, ['encrypt', 'decrypt'])
+
+      const encryptionKeyJSON = await window.crypto.subtle.exportKey(
+        'jwk',
+        encryptionKey
+      )
+
+      const encryptionKeyBase64 = Buffer.from(await JSON.stringify(encryptionKeyJSON)).toString('base64')
+
+      window.localStorage.setItem('encryptionKey', encryptionKeyBase64)
+    }
+
     if (!window.localStorage.getItem('userId')) {
       let values: Uint32Array = new Uint32Array(30);
       await window.crypto.getRandomValues(values)

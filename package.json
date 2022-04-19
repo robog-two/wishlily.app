@@ -32,6 +32,7 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"buffer": "^6.0.3",
 		"sass": "^1.50.1"
 	}
 }

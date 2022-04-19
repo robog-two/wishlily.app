@@ -3,9 +3,10 @@
   const { wishlistId, userId } = $page.params
   import logo from '../../../images/logo.svg'
   import deleteIcon from '../../../images/delete.svg'
-  let wishlist
-
   import { onMount } from 'svelte'
+  import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
+
+  let wishlist
   let itemURL = ''
   let isLoggedIn = false
   let statusMessage
@@ -13,6 +14,11 @@
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
+
+    if (isLoggedIn) {
+      await checkLogin()
+    }
+
     loadWishlistInfo()
     reloadWishlist()
   })
@@ -36,7 +42,7 @@
     }
     const info = await dbResponse.json()
     title = info.title
-    address = info.address
+    address = await decrypt(info.address)
     color = info.color
     console.log(wishlist)
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage

@@ -12,6 +12,9 @@ module.exports = {
 		sourceType: 'module',
 		ecmaVersion: 2020
 	},
+  rules: {
+    semi: 'never',
+  },
 	env: {
 		browser: true,
 		es2017: true,
