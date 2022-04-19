@@ -2,6 +2,7 @@
   import { page } from '$app/stores'
   const { wishlistId, userId } = $page.params
   import logo from '../../../images/logo.svg'
+  import deleteIcon from '../../../images/delete.svg'
   let wishlist
 
   import { onMount } from 'svelte'
@@ -58,7 +59,7 @@
       console.log(await dbResponse.json())
       return
     }
-    wishlist = await dbResponse.json()
+    wishlist = (await dbResponse.json()).reverse()
     console.log(wishlist)
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
   }
@@ -125,47 +126,159 @@
   }
 </script>
 
-<div style="background-color: {color}">
-  {#if statusMessage}
-    <span>{ statusMessage ?? '' }</span>
-  {/if}
+<style lang="sass">
+  .wrapper
+    width: calc(100% - 30px)
+    min-height: calc(100vh - 80px)
+    padding: 40px 15px 40px 15px
 
-  <a href="/dashboard">
-    <img src="{logo}" alt="Back to home" />
-  </a>
+  .center
+    margin: 0 auto 0 auto
+    max-width: 425px
 
-  {#if title}
-    <h1>{title}</h1>
-  {/if}
+  .lily
+    aspect-ratio: 1.149
+    width: 64px
+    margin: 0 auto 0 auto
+    display: block
 
-  {#if address}
-    <h3>{address}</h3>
-  {/if}
+  .floaty-status
+    top: 20px
+    left: 20px
+    position: fixed
+    display: block
+    border-radius: 5px
+    width: calc(100% - 40px)
+    line-height: 40px
+    font-size: 25px
+    font-family: 'Readex Pro', sans-serif
+    background-color: black
+    color: white
+    text-align: center
 
-  {#if isLoggedIn}
-    <form on:submit|preventDefault="{addProduct}">
-      <span>Add Product:</span>
-      <input bind:value="{itemURL}" />
-      <input type="submit" style="display: none" />
-    </form>
-  {/if}
+  .list-title
+    font-family: 'Readex Pro', sans-serif
+    font-size: 25pt
+    font-weight: normal
+    margin: 7px 0 0 0
+    text-align: center
 
-  {#if wishlist}
-    {#each wishlist as wish}
-      {#if isLoggedIn}
-        <button on:click="{() => {deleteProduct(wish.id)}}">Delete</button>
-      {/if}
-      <a href="{wish.link}">
-        <span>{wish.price}</span>
-        {#if wish.link.includes('amazon.com')}
-          <span>Amazon</span>
-        {/if}
-        {#if wish.link.includes('etsy.com')}
-          <span>Etsy</span>
-        {/if}
-        <img src="{wish.cover}" alt="{wish.title}" />
-        <p>{wish.title}</p>
-      </a>
-    {/each}
-  {/if}
+  .address
+    font-family: 'Space Grotesk', sans-serif
+    font-weight: bold
+    font-size: 11pt
+    margin-top: 0
+    text-align: center
+
+  .wish
+    border-radius: 30px
+    background-color: white
+    filter: drop-shadow(1px 3px 1.5px black)
+    display: block
+    overflow: hidden
+    margin-bottom: 20px
+
+  .wish-cover
+    border-top-left-radius: 30px
+    border-top-right-radius: 30px
+    width: 100%
+    height: auto
+
+  .corset
+    height: 0
+
+  .padder
+    width: 100%
+    aspect-ratio: 2
+
+  .floaty-tags
+    display: flex
+    flex-direction: row-reverse
+    padding-top: 15px
+    padding-right: 10px
+
+  .floaty-tags span
+    border-radius: 25px
+    height: 25px
+    line-height: 25px
+    padding-left: 10px
+    padding-right: 10px
+    margin-right: 10px
+    background-color: white
+
+  .floaty-tags span img
+    height: 80%
+    width: auto
+    margin-top: 10%
+
+  .wish-title
+    text-decoration: none
+    color: black
+    margin: 0
+    padding: 10px 25px 10px 25px
+    font-size: 20px
+    text-align: center
+    font-family: 'Space Grotesk', sans-serif
+    font-weight: 600
+    display: block
+</style>
+
+<div class="wrapper" style="background-color: {color}">
+  <div class="center">
+    {#if statusMessage}
+      <span class="floaty-status">{ statusMessage ?? '' }</span>
+    {/if}
+
+    <a class="" href="/dashboard">
+      <img class="lily" src="{logo}" alt="Back to home" />
+    </a>
+
+    {#if title}
+      <h1 class="list-title">{title}</h1>
+    {/if}
+
+    {#if address}
+      <h3 class="address">{address}</h3>
+    {/if}
+
+    {#if isLoggedIn}
+      <form on:submit|preventDefault="{addProduct}">
+        <span>Add Product:</span>
+        <input bind:value="{itemURL}" />
+        <input type="submit" style="display: none" />
+      </form>
+    {/if}
+
+    {#if wishlist}
+      {#each wishlist as wish}
+        <div class="wish">
+          <div class="corset">
+            <a href="{wish.link}">
+              <img class="wish-cover" src="{wish.cover}" alt="{wish.title}" />
+            </a>
+          </div>
+          <div class="corset">
+            <div class="floaty-tags">
+              {#if isLoggedIn}
+                <span on:click="{() => {deleteProduct(wish.id)}}">
+                  <img class="delete-icon" src={deleteIcon} alt="Delete"/>
+                </span>
+              {/if}
+              <span>{wish.price}</span>
+              {#if wish.link.includes('amazon.com')}
+                <span>Amazon</span>
+              {/if}
+              {#if wish.link.includes('etsy.com')}
+                <span>Etsy</span>
+              {/if}
+            </div>
+          </div>
+          <div class="padder"></div>
+          <a class="wish-title" href="{wish.link}">
+            {wish.title}
+          </a>
+        </div>
+      {/each}
+    {/if}
+  </div>
 </div>
