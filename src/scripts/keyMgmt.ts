@@ -5,17 +5,24 @@ export async function checkLogin() {
   prefetch('/login')
 
   if (!window.localStorage.getItem('encryptionKey')) {
-    goto(`/login#${window.location.href}`)
+    goto(`/login#${encodeURIComponent(window.location.href)}`)
   } else {
     window.location.hash = window.localStorage.getItem('encryptionKey')
   }
 }
 
 async function getKey(): Promise<CryptoKey> {
+  const keyBase64 = window.location.hash ?? window.localStorage.getItem('encryptionKey')
+
+  if (keyBase64 === null) {
+    goto(`/login#${encodeURIComponent(window.location.href)}`)
+    throw new Error('Unable to load encryption keys.')
+  }
+
   return await window.crypto.subtle.importKey(
     'jwk',
     JSON.parse(
-      Buffer.from(window.location.hash || window.localStorage.getItem('encryptionKey'), 'base64').toString()
+      Buffer.from(keyBase64, 'base64').toString()
     ),
     { name: 'AES-CBC', length: 128 },
     true,

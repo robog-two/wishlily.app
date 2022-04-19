@@ -77,7 +77,7 @@
     }
 
     if (window.location.hash?.startsWith('https://wishlily.app')) {
-      goto(window.location.hash.slice(20))
+      goto(decodeURIComponent(window.location.hash).slice(20))
     } else {
       goto('/dashboard')
     }
