@@ -52,7 +52,7 @@
         body: JSON.stringify({
           userId: window.localStorage.getItem('userId'),
           userKey: window.localStorage.getItem('userKey'),
-          title: tempListName,
+          title: await encrypt(tempListName),
           color: tempListColor,
           address: await encrypt(tempListAddress)
         })

@@ -41,7 +41,7 @@
       return
     }
     const info = await dbResponse.json()
-    title = info.title
+    title = await decrypt(info.title)
     address = await decrypt(info.address)
     color = info.color
     console.log(wishlist)
