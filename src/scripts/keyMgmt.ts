@@ -24,25 +24,31 @@ async function getKey(): Promise<CryptoKey> {
 }
 
 export async function decrypt(text: string): Promise<string> {
-  if (!text.startsWith('===client_side_enc===')) {
-    console.log(await encrypt(text))
-    return text
-  } else {
-    const encrypted = Buffer.from(text.slice(21), 'base64')
-    const iv = window.crypto.getRandomValues(new Uint8Array(16))
-    return new TextDecoder('utf-8').decode(await window.crypto.subtle.decrypt(
-      { name: 'AES-CBC', length: 128, iv },
-      await getKey(),
-      encrypted
-    ))
+  try {
+    if (!text.startsWith('client_side_enc,')) {
+      console.log(await encrypt(text))
+      return text
+    } else {
+      const sliced = text.slice(16).split(',')
+      const encrypted = Buffer.from(sliced[0], 'hex')
+      const iv = Buffer.from(sliced[1], 'hex') as ArrayBuffer
+      return Buffer.from(await window.crypto.subtle.decrypt(
+        { name: 'AES-CBC', length: 128, iv },
+        await getKey(),
+        encrypted
+      )).toString('utf8')
+    }
+  } catch (e) {
+    console.log(e)
+    return ''
   }
 }
 
 export async function encrypt(text: string): Promise<string> {
   const iv = window.crypto.getRandomValues(new Uint8Array(16))
-  return '===client_side_enc===' + Buffer.from(await window.crypto.subtle.encrypt(
+  return 'client_side_enc,' + Buffer.from(await window.crypto.subtle.encrypt(
     { name: 'AES-CBC', length: 128, iv },
     await getKey(),
-    new TextEncoder().encode(text)
-  )).toString('base64')
+    Buffer.from(text, 'utf8') as ArrayBuffer
+  )).toString('hex') + ',' + Buffer.from(iv).toString('hex')
 }
