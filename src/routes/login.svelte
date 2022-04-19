@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte'
   import { goto, prefetch } from '$app/navigation'
-  import { Buffer } from 'buffer/'
+  import { Buffer } from 'buffer/index.js'
 
   let message = ''
 
