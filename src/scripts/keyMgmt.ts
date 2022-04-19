@@ -46,9 +46,13 @@ export async function decrypt(text: string): Promise<string> {
 
 export async function encrypt(text: string): Promise<string> {
   const iv = window.crypto.getRandomValues(new Uint8Array(16))
-  return 'client_side_enc,' + Buffer.from(await window.crypto.subtle.encrypt(
+  const encrypted = Buffer.from(await window.crypto.subtle.encrypt(
     { name: 'AES-CBC', length: 128, iv },
     await getKey(),
     Buffer.from(text, 'utf8') as ArrayBuffer
-  )).toString('hex') + ',' + Buffer.from(iv).toString('hex')
+  )).toString('hex')
+
+  console.log(encrypted)
+
+  return `client_side_enc,${encrypted},${Buffer.from(iv).toString('hex')}`
 }
