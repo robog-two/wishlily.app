@@ -37,7 +37,7 @@
             body: JSON.stringify({
               userId: window.localStorage.getItem('userId'),
               userKey: window.localStorage.getItem('userKey'),
-              id: wishlist.id
+              wishlistId: wishlist.id
             })
           })
           if (dbResponse.status < 200 || dbResponse.status >= 400) {

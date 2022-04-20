@@ -46,22 +46,26 @@
       const tempListAddress = listAddress
       listAddress = undefined
 
+      const body = {
+        userId: window.localStorage.getItem('userId'),
+        userKey: window.localStorage.getItem('userKey'),
+        title: await encrypt(tempListName),
+        color: tempListColor,
+        address: tempListAddress === undefined ? undefined : await encrypt(tempListAddress)
+      }
+
+      console.log(body)
+
       const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_wishlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-          userId: window.localStorage.getItem('userId'),
-          userKey: window.localStorage.getItem('userKey'),
-          title: await encrypt(tempListName),
-          color: tempListColor,
-          address: tempListAddress === undefined ? undefined : await encrypt(tempListAddress)
-        })
+        body: JSON.stringify(body)
       })
 
       if (dbResponse.status < 200 || dbResponse.status >= 400) {
-        statusMessage = (await dbResponse.json())?.message ?? 'Error creating wishlist.'
+        statusMessage = JSON.parse((await dbResponse.json())?.error)?.message ?? 'Error creating wishlist.'
         return
       }
 
