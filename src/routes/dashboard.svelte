@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import { checkLogin, encrypt } from '../scripts/keyMgmt';
+  import { checkLogin, decrypt, encrypt } from '../scripts/keyMgmt';
   import { onMount } from 'svelte';
 
   let statusMessage
@@ -29,7 +29,9 @@
         console.log(await dbResponse.json())
         return
       }
+
       wishlists = await dbResponse.json()
+
       console.log(wishlists)
       statusMessage = undefined
     }
@@ -54,12 +56,12 @@
           userKey: window.localStorage.getItem('userKey'),
           title: await encrypt(tempListName),
           color: tempListColor,
-          address: await encrypt(tempListAddress)
+          address: tempListAddress === undefined ? undefined : await encrypt(tempListAddress)
         })
       })
+
       if (dbResponse.status < 200 || dbResponse.status >= 400) {
-        console.log(await dbResponse.text())
-        statusMessage = 'Error creating wishlist.'
+        statusMessage = (await dbResponse.json())?.message ?? 'Error creating wishlist.'
         return
       }
 
@@ -86,7 +88,13 @@
 {#if wishlists}
   {#each wishlists as wishlist}
     <a href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
-      <p>{wishlist.title}</p>
+      <p>
+        {#await decrypt(wishlist.title)}
+          Loading...
+          {:then title}
+            {title}
+        {/await}
+      </p>
     </a>
   {/each}
 {/if}
