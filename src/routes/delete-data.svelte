@@ -1,7 +1,7 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-import { decrypt } from "src/scripts/keyMgmt";
-import { onMount } from "svelte";
+  import { decrypt } from "../scripts/keyMgmt";
+  import { onMount } from "svelte";
 
   let message = 'Please confirm to delete your data.'
 
