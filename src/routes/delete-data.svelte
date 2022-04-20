@@ -1,6 +1,6 @@
 <script lang="ts">
   import { goto } from "$app/navigation";
-  import { decrypt } from "../scripts/keyMgmt";
+  import { checkLogin, decrypt } from "../scripts/keyMgmt";
   import { onMount } from "svelte";
 
   let message = 'Please confirm to delete your data.'
@@ -27,8 +27,10 @@
         }
 
         const wishlists = await dbResponse.json()
+        console.log(wishlists)
 
         for (const wishlist of wishlists) {
+          console.log(wishlist)
           dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_wishlist', {
             method: 'POST',
             headers: {
