@@ -5,6 +5,7 @@
   import deleteIcon from '../../../images/delete.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
+import { object_without_properties } from 'svelte/internal'
 
   let wishlist
   let itemURL = ''
@@ -42,6 +43,7 @@
     }
     const info = await dbResponse.json()
     title = await decrypt(info.title)
+    $page.params['s'] = title
     address = await decrypt(info.address)
     color = info.color
     console.log(wishlist)
@@ -133,8 +135,13 @@
 </script>
 
 <head>
-  <title>{$page.params.s}</title>
+  <title>{decodeURIComponent($page.params['s'])}</title>
+  <meta property="og:title" content="$page.params['s']" />
+  <meta property="og:description" content="If you're thinking of me, look no further!" />
+  <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}" />
 </head>
 
 <style lang="sass">
