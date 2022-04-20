@@ -70,7 +70,7 @@
       })
 
       if (response.status !== 204) {
-        message = 'Login failed! Try refreshing this page or clearing localStorage.'
+        message = 'Login failed! Your token is corrupt.'
         console.log(await response.text())
         return
       }
