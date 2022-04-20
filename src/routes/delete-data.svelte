@@ -21,9 +21,9 @@ import { onMount } from "svelte";
           })
         })
         if (dbResponse.status < 200 || dbResponse.status >= 400) {
-          message = 'Error loading wishlists!'
+          message += 'Error loading wishlists!'
           console.log(await dbResponse.json())
-          return
+          throw new Error('')
         }
 
         const wishlists = await dbResponse.json()
@@ -41,14 +41,13 @@ import { onMount } from "svelte";
             })
           })
           if (dbResponse.status < 200 || dbResponse.status >= 400) {
-            message = `Error deleting wishlist "${await decrypt(wishlist.title)}"!`
+            message += `Error deleting wishlist "${await decrypt(wishlist.title)}"!`
             console.log(await dbResponse.json())
-            return
+            throw new Error('')
           }
         }
         message = "Deleting user information..."
       } catch (e) {
-        message = "Failed to clear all wishlists, continuing anyways."
       }
 
       const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_user', {
@@ -61,12 +60,6 @@ import { onMount } from "svelte";
           userKey: window.localStorage.getItem('userKey')
         })
       })
-      if (dbResponse.status < 200 || dbResponse.status >= 400) {
-        message = `Error deleting user - Your wishlists and saved products have been deleted, but not your login information.`
-        console.log(await dbResponse.json())
-        return
-      }
-
       window.localStorage.clear()
     }
 

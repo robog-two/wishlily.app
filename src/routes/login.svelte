@@ -49,7 +49,7 @@
       })
 
       if (response.status !== 204) {
-        message = 'Login failed! Try refreshing this page or clearing localStorage.'
+        message = 'Login failed! Your token is corrupt.'
         console.log(await response.text())
         return
       } else {
@@ -94,3 +94,6 @@
 </style>
 
 <h1>{message}</h1>
+{#if message === 'Login failed! Your token is corrupt.'}
+  <p>Click <a href="/delete-data">here</a> to reset your data.</p>
+{/if}
