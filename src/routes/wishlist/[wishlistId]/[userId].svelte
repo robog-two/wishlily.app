@@ -145,6 +145,8 @@ import { goto } from '$app/navigation';
   <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:type" content="website" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}" />
 </head>
 
