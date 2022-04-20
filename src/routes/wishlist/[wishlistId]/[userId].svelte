@@ -5,6 +5,7 @@
   import deleteIcon from '../../../images/delete.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
+import { goto } from '$app/navigation';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
@@ -44,7 +45,9 @@
     }
     const info = await dbResponse.json()
     title = await decrypt(info.title)
-    $page.url.searchParams.set('s', title)
+    if (decodeURIComponent($page.url.searchParams.get('s')) !== title) {
+      goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}#${window.location.hash}`)
+    }
     address = await decrypt(info.address)
     color = info.color
     console.log(wishlist)
