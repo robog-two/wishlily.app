@@ -132,6 +132,11 @@
   }
 </script>
 
+<head>
+  <title>{$page.params.s}</title>
+  <meta property="og:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
+</head>
+
 <style lang="sass">
   .wrapper
     width: calc(100% - 30px)
