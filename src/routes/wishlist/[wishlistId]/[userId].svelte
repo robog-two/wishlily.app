@@ -46,7 +46,7 @@ import { goto } from '$app/navigation';
     const info = await dbResponse.json()
     title = await decrypt(info.title)
     if (decodeURIComponent($page.url.searchParams.get('s')) !== title) {
-      goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}#${window.location.hash}`)
+      goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}${window.location.hash}`)
     }
     address = await decrypt(info.address)
     color = info.color
