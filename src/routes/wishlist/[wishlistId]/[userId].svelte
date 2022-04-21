@@ -3,15 +3,18 @@
   const { wishlistId, userId } = $page.params
   import logo from '../../../images/logo.svg'
   import deleteIcon from '../../../images/delete.svg'
+  import addIcon from '../../../images/plus.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
   import { goto } from '$app/navigation';
+import { text } from 'svelte/internal';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
   let wishlist
   let itemURL = ''
   let isLoggedIn = false
+  let addingItem = false
   let statusMessage
   let title, address, color
   let searchResults: any = undefined
@@ -51,8 +54,8 @@
     if (decodeURIComponent($page.url.searchParams.get('s')) !== title) {
       goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}${window.location.hash}`)
     }
-    address = await decrypt(info.address)
-    color = info.color
+    address = address === undefined ? undefined : await decrypt(info.address)
+    color = info.color.toString().toLowerCase()
     console.log(wishlist)
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
   }
@@ -97,6 +100,7 @@
         searchResults = undefined
         cancelSearch = undefined
         chooseResult = undefined
+        addingItem = false
       }
 
       cancelSearch = () => {
@@ -105,12 +109,15 @@
         chooseResult = undefined
         statusMessage = undefined
         searchResults = undefined
+        addingItem = false
       }
     })
   }
 
   async function addProduct() {
     const itemURLTemp = itemURL
+    console.log(itemURL)
+    addingItem = false
     itemURL = undefined
     statusMessage = 'Finding item...'
     const productResponse = await fetch(`https://proxy.wishlily.app/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
@@ -135,6 +142,7 @@
         ...product
       })
     })
+    addingItem = false
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
       console.log(await dbResponse.text())
       statusMessage = 'Error adding item.'
@@ -170,6 +178,18 @@
     statusMessage = undefined
     reloadWishlist()
     return false
+  }
+
+  function startSearch() {
+    addingItem = true
+    const checkExist = setInterval(async () => {
+      const textbox = (document.getElementById('searchbox-text') as HTMLInputElement)
+      if (textbox) {
+        clearInterval(checkExist)
+        textbox.focus()
+        textbox.select()
+      }
+    }, 100);
   }
 </script>
 
@@ -281,7 +301,7 @@
     font-weight: 600
     display: block
 
-  .results
+  .vignette
     z-index: 1
     width: 100vw
     height: 100vh
@@ -290,9 +310,46 @@
     position: fixed
     overflow-y: scroll
 
-  .results .center
+  .vignette .center
     padding-top: 40px
     padding-bottom: 40px
+
+  .add-item-container
+    bottom: 0
+    left: 0
+    position: fixed
+    width: 100vw
+    height: 40px
+    display: flex
+    flex-direction: row-reverse
+
+  .add-item
+    width: 60px
+    height: 60px
+    margin-right: 20px
+    margin-top: -35px
+
+  .searchbox
+    display: flex
+    flex-direction: column-reverse
+    padding-bottom: 40px
+
+  .searchbox-text
+    font-family: 'Space Grotesk', sans-serif
+    font-weight: normal
+    font-size: 20pt
+    border: none
+    background-color: black
+    width: 100%
+    border-radius: 20pt
+    text-align: center
+    color: #c2c2c2
+
+  .searchbox span
+    text-align: center
+    display: block
+    font-family: 'Readex Pro'
+    margin-bottom: 5px
 </style>
 
 <div class="wrapper" style="background-color: {color}">
@@ -311,14 +368,6 @@
 
     {#if address}
       <h3 class="address">{address}</h3>
-    {/if}
-
-    {#if isLoggedIn}
-      <form on:submit|preventDefault="{addProduct}">
-        <span>Add Product:</span>
-        <input bind:value="{itemURL}" />
-        <input type="submit" style="display: none" />
-      </form>
     {/if}
 
     {#if wishlist}
@@ -353,33 +402,49 @@
       {/each}
     {/if}
 
-    {#if searchResults}
-    <div class="results" style="background-color: {color.toString().toLowerCase()}a0" on:click="{cancelSearch()}">
-      <div class="center">
-      {#each searchResults as result}
-        <div class="wish">
-          <div class="corset">
-            <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
-          </div>
-          <div class="corset">
-            <div class="floaty-tags">
-              <span>{result.price}</span>
-              {#if result.link.includes('amazon.com')}
-                <span>Amazon</span>
-              {/if}
-              {#if result.link.includes('etsy.com')}
-                <span>Etsy</span>
-              {/if}
-            </div>
-          </div>
-          <div class="padder"></div>
-          <p class="wish-title" on:click|preventDefault="{chooseResult(result)}">
-            {result.title}
-          </p>
-        </div>
-      {/each}
+    {#if isLoggedIn && !addingItem}
+      <div class="add-item-container" style="background: linear-gradient(0deg, {color}ff 0%, {color}00 100%)">
+        <img class="add-item" src="{addIcon}" alt="Add new product"  on:click="{startSearch}"/>
       </div>
-    </div>
+    {/if}
+
+    {#if searchResults}
+      <div class="vignette" style="background-color: {color}a0" on:click="{cancelSearch()}">
+        <div class="center">
+        {#each searchResults as result}
+          <div class="wish">
+            <div class="corset">
+              <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
+            </div>
+            <div class="corset">
+              <div class="floaty-tags">
+                <span>{result.price}</span>
+                {#if result.link.includes('amazon.com')}
+                  <span>Amazon</span>
+                {/if}
+                {#if result.link.includes('etsy.com')}
+                  <span>Etsy</span>
+                {/if}
+              </div>
+            </div>
+            <div class="padder"></div>
+            <p class="wish-title" on:click|preventDefault="{chooseResult(result)}">
+              {result.title}
+            </p>
+          </div>
+        {/each}
+        </div>
+      </div>
+    {:else if addingItem}
+      <div class="vignette searchbox" style="background-color: {color}a0" on:click|self="{() => {addingItem = false; itemURL = ''}}">
+        <div class="center">
+          <form on:submit|preventDefault="{addProduct}">
+            <span>Paste link or type search.</span>
+            <input id="searchbox-text" style="color: {itemURL === '' || itemURL === undefined ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
+            <input type="submit" style="display: none" />
+          </form>
+        </div>
+      </div>
     {/if}
   </div>
 </div>

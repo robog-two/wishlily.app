@@ -2,6 +2,7 @@
   import { goto } from '$app/navigation'
   import { checkLogin, decrypt, encrypt } from '../scripts/keyMgmt';
   import { onMount } from 'svelte';
+  import logo from '../images/logo_large_format.svg';
 
   let statusMessage
   let wishlists
@@ -78,6 +79,8 @@
 {#if statusMessage}
   <span>{ statusMessage }</span>
 {/if}
+
+<img src="{logo}" alt="Wish Lily" />
 
 <form on:submit|preventDefault="{addWishlist}" action="">
   <span>List Name:</span>
