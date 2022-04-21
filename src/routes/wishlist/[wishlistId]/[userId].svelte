@@ -332,7 +332,7 @@ import { text } from 'svelte/internal';
   .searchbox
     display: flex
     flex-direction: column-reverse
-    padding-bottom: 40px
+    padding-bottom: 100px
 
   .searchbox-text
     font-family: 'Space Grotesk', sans-serif
