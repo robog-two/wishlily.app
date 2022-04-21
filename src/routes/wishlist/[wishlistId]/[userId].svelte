@@ -5,7 +5,7 @@
   import deleteIcon from '../../../images/delete.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
-import { goto } from '$app/navigation';
+  import { goto } from '$app/navigation';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
@@ -14,6 +14,9 @@ import { goto } from '$app/navigation';
   let isLoggedIn = false
   let statusMessage
   let title, address, color
+  let searchResults: any = undefined
+  let chooseResult: Function | undefined = undefined
+  let cancelSearch: Function | undefined = undefined
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
@@ -76,17 +79,49 @@ import { goto } from '$app/navigation';
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
   }
 
+  async function search(query: string): Promise<any> {
+    console.log('Search not implemented.')
+
+    const productResponse = await fetch(`https://proxy.wishlily.app/etsy/search?q=${encodeURIComponent(query)}`)
+    if (productResponse.status < 200 || productResponse.status >= 400) {
+      statusMessage = 'Error parsing search results.'
+      console.log(await productResponse.json())
+      return
+    }
+    searchResults = (await productResponse.json()).message
+    statusMessage = undefined
+
+    return new Promise((resolve, reject) => {
+      chooseResult = (result) => {
+        resolve(result)
+        searchResults = undefined
+        cancelSearch = undefined
+        chooseResult = undefined
+      }
+
+      cancelSearch = () => {
+        reject()
+        cancelSearch = undefined
+        chooseResult = undefined
+        statusMessage = undefined
+        searchResults = undefined
+      }
+    })
+  }
+
   async function addProduct() {
     const itemURLTemp = itemURL
     itemURL = undefined
-    statusMessage = 'Adding item...'
+    statusMessage = 'Finding item...'
     const productResponse = await fetch(`https://proxy.wishlily.app/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
-      console.log(await productResponse.text())
+      console.log(await productResponse.json())
       statusMessage = 'Error parsing item.'
       return
     }
-    const product = await (productResponse).json()
+    const response = await productResponse.json()
+    const product = response.isSearch ? await search(itemURLTemp) : response
+    statusMessage = "Adding item..."
 
     const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/add_item_to_wishlist', {
       method: 'POST',
@@ -245,6 +280,19 @@ import { goto } from '$app/navigation';
     font-family: 'Space Grotesk', sans-serif
     font-weight: 600
     display: block
+
+  .results
+    z-index: 1
+    width: 100vw
+    height: 100vh
+    top: 0
+    left: 0
+    position: fixed
+    overflow-y: scroll
+
+  .results .center
+    padding-top: 40px
+    padding-bottom: 40px
 </style>
 
 <div class="wrapper" style="background-color: {color}">
@@ -303,6 +351,35 @@ import { goto } from '$app/navigation';
           </a>
         </div>
       {/each}
+    {/if}
+
+    {#if searchResults}
+    <div class="results" style="background-color: {color.toString().toLowerCase()}a0" on:click="{cancelSearch()}">
+      <div class="center">
+      {#each searchResults as result}
+        <div class="wish">
+          <div class="corset">
+            <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
+          </div>
+          <div class="corset">
+            <div class="floaty-tags">
+              <span>{result.price}</span>
+              {#if result.link.includes('amazon.com')}
+                <span>Amazon</span>
+              {/if}
+              {#if result.link.includes('etsy.com')}
+                <span>Etsy</span>
+              {/if}
+            </div>
+          </div>
+          <div class="padder"></div>
+          <p class="wish-title" on:click|preventDefault="{chooseResult(result)}">
+            {result.title}
+          </p>
+        </div>
+      {/each}
+      </div>
+    </div>
     {/if}
   </div>
 </div>
