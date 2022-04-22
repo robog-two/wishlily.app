@@ -85,7 +85,7 @@ import { text } from 'svelte/internal';
   async function search(query: string): Promise<any> {
     console.log('Search not implemented.')
 
-    const productResponse = await fetch(`https://proxy.wishlily.app/etsy/search?q=${encodeURIComponent(query)}`)
+    const productResponse = await fetch(`https://proxy.wishlily.app/generic/search?q=${encodeURIComponent(query)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
       statusMessage = 'Error parsing search results.'
       console.log(await productResponse.json())
@@ -332,23 +332,24 @@ import { text } from 'svelte/internal';
   .searchbox
     display: flex
     flex-direction: column-reverse
-    padding-bottom: 100px
 
   .searchbox-text
     font-family: 'Space Grotesk', sans-serif
     font-weight: normal
-    font-size: 20pt
+    font-size: 30pt
     border: none
     background-color: black
     width: 100%
     border-radius: 20pt
     text-align: center
     color: #c2c2c2
+    margin-bottom: 80px
 
   .searchbox span
     text-align: center
     display: block
     font-family: 'Readex Pro'
+    font-size: 14pt
     margin-bottom: 5px
 </style>
 
@@ -371,35 +372,37 @@ import { text } from 'svelte/internal';
     {/if}
 
     {#if wishlist}
-      {#each wishlist as wish}
-        <div class="wish">
-          <div class="corset">
-            <a href="{wish.link}">
-              <img class="wish-cover" src="{wish.cover}" alt="{wish.title}" />
+      <div style="{searchResults ? 'overflow: hidden' : ''}">
+        {#each wishlist as wish}
+          <div class="wish">
+            <div class="corset">
+              <a href="{wish.link}">
+                <img class="wish-cover" src="{wish.cover}" alt="{wish.title}" />
+              </a>
+            </div>
+            <div class="corset">
+              <div class="floaty-tags">
+                {#if isLoggedIn}
+                  <span on:click="{() => {deleteProduct(wish.id)}}">
+                    <img class="delete-icon" src={deleteIcon} alt="Delete"/>
+                  </span>
+                {/if}
+                <span>{wish.price}</span>
+                {#if wish.link.includes('amazon.com')}
+                  <span>Amazon</span>
+                {/if}
+                {#if wish.link.includes('etsy.com')}
+                  <span>Etsy</span>
+                {/if}
+              </div>
+            </div>
+            <div class="padder"></div>
+            <a class="wish-title" href="{wish.link}">
+              {wish.title}
             </a>
           </div>
-          <div class="corset">
-            <div class="floaty-tags">
-              {#if isLoggedIn}
-                <span on:click="{() => {deleteProduct(wish.id)}}">
-                  <img class="delete-icon" src={deleteIcon} alt="Delete"/>
-                </span>
-              {/if}
-              <span>{wish.price}</span>
-              {#if wish.link.includes('amazon.com')}
-                <span>Amazon</span>
-              {/if}
-              {#if wish.link.includes('etsy.com')}
-                <span>Etsy</span>
-              {/if}
-            </div>
-          </div>
-          <div class="padder"></div>
-          <a class="wish-title" href="{wish.link}">
-            {wish.title}
-          </a>
-        </div>
-      {/each}
+        {/each}
+      </div>
     {/if}
 
     {#if isLoggedIn && !addingItem}
@@ -424,6 +427,18 @@ import { text } from 'svelte/internal';
                 {/if}
                 {#if result.link.includes('etsy.com')}
                   <span>Etsy</span>
+                {/if}
+                {#if result.link.includes('target.com')}
+                  <span>Target</span>
+                {/if}
+                {#if result.link.includes('walmart.com')}
+                  <span>Walmart</span>
+                {/if}
+                {#if result.link.includes('barnesandnoble.com')}
+                  <span>Barnes & Noble</span>
+                {/if}
+                {#if result.link.includes('bestbuy.com')}
+                  <span>Best Buy</span>
                 {/if}
               </div>
             </div>
