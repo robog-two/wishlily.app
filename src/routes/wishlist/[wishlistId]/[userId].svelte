@@ -255,7 +255,7 @@ import { text } from 'svelte/internal';
     filter: drop-shadow(1px 3px 1.5px black)
     display: block
     overflow: hidden
-    margin-bottom: 20px
+    margin-bottom: 30px
 
   .wish-cover
     border-top-left-radius: 30px
@@ -311,7 +311,7 @@ import { text } from 'svelte/internal';
     overflow-y: scroll
 
   .vignette .center
-    padding-top: 40px
+    padding-top: 100px
     padding-bottom: 40px
 
   .add-item-container
@@ -361,7 +361,7 @@ import { text } from 'svelte/internal';
 </style>
 
 <div class="wrapper" style="background-color: {color}">
-  <div class="center">
+  <div class="center" style="{searchResults !== undefined ? 'display: none' : ''}">
     {#if statusMessage}
       <span class="floaty-status">{ statusMessage ?? '' }</span>
     {/if}
@@ -379,7 +379,7 @@ import { text } from 'svelte/internal';
     {/if}
 
     {#if wishlist}
-      <div style="{searchResults !== undefined ? 'display: none' : ''}">
+      <div>
         {#each wishlist as wish}
           <div class="wish">
             <div class="corset">
@@ -417,57 +417,56 @@ import { text } from 'svelte/internal';
         <img class="add-item" src="{addIcon}" alt="Add new product"  on:click="{startSearch}"/>
       </div>
     {/if}
-
-    {#if searchResults}
-      <div class="vignette" style="background-color: {color}a0" on:click="{cancelSearch()}">
-        <div class="center">
-        <span class="search-instructions">Pick an item to add to your list.</span>
-        {#each searchResults as result}
-          <div class="wish">
-            <div class="corset">
-              <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
-            </div>
-            <div class="corset">
-              <div class="floaty-tags">
-                <span>{result.price}</span>
-                {#if result.link.includes('amazon.com')}
-                  <span>Amazon</span>
-                {/if}
-                {#if result.link.includes('etsy.com')}
-                  <span>Etsy</span>
-                {/if}
-                {#if result.link.includes('target.com')}
-                  <span>Target</span>
-                {/if}
-                {#if result.link.includes('walmart.com')}
-                  <span>Walmart</span>
-                {/if}
-                {#if result.link.includes('barnesandnoble.com')}
-                  <span>Barnes & Noble</span>
-                {/if}
-                {#if result.link.includes('bestbuy.com')}
-                  <span>Best Buy</span>
-                {/if}
-              </div>
-            </div>
-            <div class="padder"></div>
-            <p class="wish-title" on:click|preventDefault="{chooseResult(result)}">
-              {result.title}
-            </p>
-          </div>
-        {/each}
-        </div>
-      </div>
-    {:else if addingItem}
-      <div class="vignette searchbox" style="background-color: {color}a0" on:click|self="{() => {addingItem = false; itemURL = ''}}">
-        <div class="center">
-          <form on:submit|preventDefault="{addProduct}">
-            <span>Paste link or type search.</span>
-            <input id="searchbox-text" style="color: {itemURL === '' || itemURL === undefined ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
-            <input type="submit" style="display: none" />
-          </form>
-        </div>
-      </div>
-    {/if}
   </div>
+  {#if searchResults}
+    <div class="vignette" style="background-color: {color}a0" on:click="{cancelSearch()}">
+      <div class="center">
+      <span class="search-instructions">Touch an item to add, touch anywhere else to cancel.</span>
+      {#each searchResults as result}
+        <div class="wish">
+          <div class="corset">
+            <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
+          </div>
+          <div class="corset">
+            <div class="floaty-tags">
+              <span>{result.price}</span>
+              {#if result.link.includes('amazon.com')}
+                <span>Amazon</span>
+              {/if}
+              {#if result.link.includes('etsy.com')}
+                <span>Etsy</span>
+              {/if}
+              {#if result.link.includes('target.com')}
+                <span>Target</span>
+              {/if}
+              {#if result.link.includes('walmart.com')}
+                <span>Walmart</span>
+              {/if}
+              {#if result.link.includes('barnesandnoble.com')}
+                <span>Barnes & Noble</span>
+              {/if}
+              {#if result.link.includes('bestbuy.com')}
+                <span>Best Buy</span>
+              {/if}
+            </div>
+          </div>
+          <div class="padder"></div>
+          <p class="wish-title" on:click|preventDefault="{chooseResult(result)}">
+            {result.title}
+          </p>
+        </div>
+      {/each}
+      </div>
+    </div>
+  {:else if addingItem}
+    <div class="vignette searchbox" style="background-color: {color}a0" on:click|self="{() => {addingItem = false; itemURL = ''}}">
+      <div class="center">
+        <form on:submit|preventDefault="{addProduct}">
+          <span>Paste link or type search.</span>
+          <input id="searchbox-text" style="color: {itemURL === '' || itemURL === undefined ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
+          <input type="submit" style="display: none" />
+        </form>
+      </div>
+    </div>
+  {/if}
 </div>
