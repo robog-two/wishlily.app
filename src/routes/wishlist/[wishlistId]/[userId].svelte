@@ -127,6 +127,7 @@
     }
     const response = await productResponse.json()
     const product = response.isSearch ? await search(itemURLTemp) : response
+    console.log(product)
     statusMessage = "Adding item..."
 
     const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/add_item_to_wishlist', {
@@ -138,7 +139,10 @@
         wishlistId,
         userId,
         userKey: window.localStorage.getItem('userKey'),
-        ...product
+        title: product.title,
+        cover: product.cover,
+        price: product.price,
+        link: product.link
       })
     })
     addingItem = false
