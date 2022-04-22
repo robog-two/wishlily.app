@@ -103,6 +103,7 @@
   }
 
   async function deleteWishlist(id) {
+    if (!confirm('Are you sure you want to delete this wishlist?')) return
     statusMessage = 'Deleting wishlist...'
     const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_wishlist', {
       method: 'POST',
