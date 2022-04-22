@@ -351,6 +351,13 @@ import { text } from 'svelte/internal';
     font-family: 'Readex Pro'
     font-size: 14pt
     margin-bottom: 5px
+
+  .search-instructions
+    text-align: center
+    display: block
+    font-family: 'Readex Pro'
+    font-size: 14pt
+    margin-bottom: 5px
 </style>
 
 <div class="wrapper" style="background-color: {color}">
@@ -372,7 +379,7 @@ import { text } from 'svelte/internal';
     {/if}
 
     {#if wishlist}
-      <div style="{searchResults ? 'overflow: hidden' : ''}">
+      <div style="{searchResults !== undefined ? 'display: none' : ''}">
         {#each wishlist as wish}
           <div class="wish">
             <div class="corset">
@@ -414,6 +421,7 @@ import { text } from 'svelte/internal';
     {#if searchResults}
       <div class="vignette" style="background-color: {color}a0" on:click="{cancelSearch()}">
         <div class="center">
+        <span class="search-instructions">Pick an item to add to your list.</span>
         {#each searchResults as result}
           <div class="wish">
             <div class="corset">
