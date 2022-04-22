@@ -7,7 +7,7 @@
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
   import { goto } from '$app/navigation';
-import { text } from 'svelte/internal';
+  import { text } from 'svelte/internal';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
@@ -56,7 +56,6 @@ import { text } from 'svelte/internal';
     }
     address = address === undefined ? undefined : await decrypt(info.address)
     color = info.color.toString().toLowerCase()
-    console.log(wishlist)
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
   }
 
@@ -191,6 +190,18 @@ import { text } from 'svelte/internal';
       }
     }, 100);
   }
+
+  function needsInvert(c2: string): boolean {
+    if (c2 === undefined) return false
+    const c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c2);
+    const shade = (parseInt(c[1],16)+parseInt(c[2], 16)+parseInt(c[3], 16))/3
+
+    if (shade >= 128) {
+      return false
+    } else {
+      return true
+    }
+  }
 </script>
 
 <head>
@@ -252,7 +263,7 @@ import { text } from 'svelte/internal';
   .wish
     border-radius: 30px
     background-color: white
-    filter: drop-shadow(1px 3px 1.5px black)
+    filter: drop-shadow(1px 3px 1.5px gray)
     display: block
     overflow: hidden
     margin-bottom: 30px
@@ -360,14 +371,14 @@ import { text } from 'svelte/internal';
     margin-bottom: 5px
 </style>
 
-<div class="wrapper" style="background-color: {color}">
+<div style="color: {needsInvert(color) ? 'white' : 'black'}; background-color: {color}" class="wrapper">
   <div class="center" style="{searchResults !== undefined ? 'display: none' : ''}">
     {#if statusMessage}
       <span class="floaty-status">{ statusMessage ?? '' }</span>
     {/if}
 
     <a class="" href="/dashboard">
-      <img class="lily" src="{logo}" alt="Back to home" />
+      <img style="{needsInvert(color) ? 'filter: invert(100%)' : ''}" class="lily" src="{logo}" alt="Back to home" />
     </a>
 
     {#if title}
@@ -381,7 +392,7 @@ import { text } from 'svelte/internal';
     {#if wishlist}
       <div>
         {#each wishlist as wish}
-          <div class="wish">
+          <div class="wish" style="color: black">
             <div class="corset">
               <a href="{wish.link}">
                 <img class="wish-cover" src="{wish.cover}" alt="{wish.title}" />
@@ -414,7 +425,7 @@ import { text } from 'svelte/internal';
 
     {#if isLoggedIn && !addingItem}
       <div class="add-item-container" style="background: linear-gradient(0deg, {color}ff 0%, {color}00 100%)">
-        <img class="add-item" src="{addIcon}" alt="Add new product"  on:click="{startSearch}"/>
+        <img style="{needsInvert(color) ? 'filter: invert(100%)' : ''}" class="add-item" src="{addIcon}" alt="Add new product"  on:click="{startSearch}"/>
       </div>
     {/if}
   </div>
@@ -423,7 +434,7 @@ import { text } from 'svelte/internal';
       <div class="center">
       <span class="search-instructions">Touch an item to add, touch anywhere else to cancel.</span>
       {#each searchResults as result}
-        <div class="wish">
+        <div class="wish" style="color: black">
           <div class="corset">
             <img on:click="{chooseResult(result)}" class="wish-cover" src="{`https://imagecdn.app/v2/image/${encodeURIComponent(result.cover)}?width=400&height=200&format=webp&fit=cover`}" alt="{result.title}" />
           </div>
