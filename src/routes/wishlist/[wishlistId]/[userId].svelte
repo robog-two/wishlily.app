@@ -82,8 +82,6 @@
   }
 
   async function search(query: string): Promise<any> {
-    console.log('Search not implemented.')
-
     const productResponse = await fetch(`https://proxy.wishlily.app/generic/search?q=${encodeURIComponent(query)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
       statusMessage = 'Error parsing search results.'
@@ -121,8 +119,9 @@
     statusMessage = 'Finding item...'
     const productResponse = await fetch(`https://proxy.wishlily.app/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
-      console.log(await productResponse.json())
-      statusMessage = 'Error parsing item.'
+      const json = await productResponse.json()
+      console.log(json)
+      statusMessage = json.message ?? "Error parsing item."
       return
     }
     const response = await productResponse.json()
@@ -147,7 +146,7 @@
     })
     addingItem = false
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
-      console.log(await dbResponse.text())
+      console.log(await dbResponse.json())
       statusMessage = 'Error adding item.'
       return
     }
@@ -249,6 +248,7 @@
     background-color: black
     color: white
     text-align: center
+    z-index: 50
 
   .list-title
     font-family: 'Readex Pro', sans-serif
@@ -378,7 +378,13 @@
 <div style="color: {needsInvert(color) ? 'white' : 'black'}; background-color: {color}" class="wrapper">
   <div class="center" style="{searchResults !== undefined ? 'display: none' : ''}">
     {#if statusMessage}
-      <span class="floaty-status">{ statusMessage ?? '' }</span>
+      <span class="floaty-status">{(() => {
+        const scopy = statusMessage
+        setTimeout(() => {
+          if (statusMessage === scopy) statusMessage = undefined
+        }, 3000)
+        return statusMessage
+      })()}</span>
     {/if}
 
     <a class="" href="/dashboard">
