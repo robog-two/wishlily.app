@@ -210,7 +210,7 @@
     border: 2px solid grey
     display: block
     text-decoration: none
-    filter: drop-shadow(1px 3px 1.5px gray)
+    filter: drop-shadow(1px 3px 1.5px #0000007e)
     font-family: 'Space Grotesk', sans-serif
     font-weight: normal
     font-size: 30pt
