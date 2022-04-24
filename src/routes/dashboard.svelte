@@ -212,12 +212,13 @@
     text-decoration: none
     font-family: 'Space Grotesk', sans-serif
     font-weight: normal
-    font-size: 30pt
-    line-height: 30pt
-    height: 30pt
+    font-size: 30px
+    line-height: 30px
+    height: calc(50px)
     background-color: black
     width: 100%
-    border-radius: 20pt
+    overflow-x: hidden
+    border-radius: calc(50px)
     text-align: left
     padding-left: 20px
     margin-bottom: 25px
@@ -228,6 +229,8 @@
 
   .wishlist p
     margin: 0
+    padding-top: 10px
+    padding-bottom: 10px
 
   .close
     width: 100%
@@ -236,9 +239,9 @@
     flex-direction: row-reverse
 
   .close div
-    width: 25pt
-    height: 25pt
-    transform: translate(-5pt, 3pt)
+    width: 30px
+    height: 30px
+    transform: translate(-20px, 10px)
     border-radius: 100%
 
   .close div img
