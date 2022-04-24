@@ -267,7 +267,7 @@
   .wish
     border-radius: 30px
     background-color: white
-    filter: drop-shadow(1px 3px 1.5px #0000007e)
+    border-bottom: 2px solid #0000000e
     display: block
     overflow: hidden
     margin-bottom: 30px
