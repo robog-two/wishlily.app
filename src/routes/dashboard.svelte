@@ -286,7 +286,7 @@
         {#await decrypt(wishlist.title)}
           Loading...
           {:then title}
-          <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}?s=${title}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
+          <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}?s=${encodeURIComponent(title)}&c=${encodeURIComponent(wishlist.color)}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
             <div class="close">
               <div style="background-color: {wishlist.color}">
                 <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>

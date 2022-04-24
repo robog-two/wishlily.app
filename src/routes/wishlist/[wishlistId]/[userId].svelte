@@ -10,13 +10,14 @@
   import { text } from 'svelte/internal';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
+  let color = decodeURIComponent($page.url.searchParams.get('c'))
 
   let wishlist
   let itemURL = ''
   let isLoggedIn = false
   let addingItem = false
   let statusMessage
-  let title, address, color
+  let title, address
   let searchResults: any = undefined
   let chooseResult: Function | undefined = undefined
   let cancelSearch: Function | undefined = undefined
