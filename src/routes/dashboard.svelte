@@ -301,7 +301,7 @@
     {/if}
 
     {#if addPage > 0}
-      <div class="vignette searchbox" style="background-color: #ffffffa0" on:click|self="{() => {addPage = 0}}">
+      <div class="vignette searchbox" style="background-color: #fffffff3" on:click|self="{() => {addPage = 0}}">
         <div class="center">
           <form on:submit|preventDefault="{() => {incrPage(); if (addPage >= 4) {addPage = 0;addWishlist()}}}" action="">
             {#if addPage === 1}

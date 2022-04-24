@@ -157,10 +157,10 @@
     const product = response.isSearch ? await search(itemURLTemp) : response
     console.log(product)
 
-    statusMessage = 'Saving your wishlist...'
-
     // Add it locally first, for instant feedback
     wishlist.push(product)
+
+    statusMessage = 'Saving your wishlist...'
 
     const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/add_item_to_wishlist', {
       method: 'POST',
@@ -456,7 +456,9 @@
                     <img class="delete-icon" src={deleteIcon} alt="Delete"/>
                   </span>
                 {/if}
-                <span>{wish.price}</span>
+                {#if wishlist.price}
+                  <span>{wish.price}</span>
+                {/if}
                 {#if wish.link.includes('amazon.com')}
                   <span>Amazon</span>
                 {/if}
@@ -493,7 +495,7 @@
     {/if}
   </div>
   {#if searchResults}
-    <div class="vignette" style="background-color: {color}a0" on:click="{cancelSearch()}">
+    <div class="vignette" style="background-color: {color}f3" on:click="{cancelSearch()}">
       <div class="center">
       <span class="search-instructions">Touch an item to add, touch anywhere else to cancel.</span>
       {#each searchResults as result}
@@ -533,7 +535,7 @@
       </div>
     </div>
   {:else if addingItem}
-    <div class="vignette searchbox" style="background-color: {color}a0" on:click|self="{() => {addingItem = false; itemURL = ''}}">
+    <div class="vignette searchbox" style="background-color: {color}f3" on:click|self="{() => {addingItem = false; itemURL = ''}}">
       <div class="center">
         <form on:submit|preventDefault="{addProduct}">
           <span>Paste link or type search.</span>
