@@ -207,10 +207,9 @@
     margin-bottom: 5px
 
   .wishlist
-    border: 2px solid grey
+    border: 2px solid #0000000e
     display: block
     text-decoration: none
-    filter: drop-shadow(1px 3px 1.5px #0000007e)
     font-family: 'Space Grotesk', sans-serif
     font-weight: normal
     font-size: 30pt
