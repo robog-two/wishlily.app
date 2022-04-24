@@ -256,6 +256,8 @@
     font-weight: normal
     margin: 7px 0 0 0
     text-align: center
+    margin-top: -10px
+    margin-bottom: 5px
 
   .address
     font-family: 'Space Grotesk', sans-serif
@@ -263,6 +265,7 @@
     font-size: 11pt
     margin-top: 0
     text-align: center
+    margin-bottom: 0
 
   .wish
     border-radius: 30px
@@ -303,7 +306,7 @@
   .floaty-tags span img
     height: 80%
     width: auto
-    margin-top: 10%
+    margin-top: 11%
 
   .wish-title
     text-decoration: none
@@ -373,6 +376,9 @@
     font-family: 'Readex Pro'
     font-size: 14pt
     margin-bottom: 5px
+
+  .wishes-container
+    margin-top: 20px
 </style>
 
 <div style="color: {needsInvert(color) ? 'white' : 'black'}; background-color: {color}" class="wrapper">
@@ -400,7 +406,7 @@
     {/if}
 
     {#if wishlist}
-      <div>
+      <div class="wishes-container">
         {#each wishlist as wish}
           <div class="wish" style="color: black">
             <div class="corset">
@@ -421,6 +427,18 @@
                 {/if}
                 {#if wish.link.includes('etsy.com')}
                   <span>Etsy</span>
+                {/if}
+                {#if wish.link.includes('target.com')}
+                  <span>Target</span>
+                {/if}
+                {#if wish.link.includes('walmart.com')}
+                  <span>Walmart</span>
+                {/if}
+                {#if wish.link.includes('barnesandnoble.com')}
+                  <span>Barnes & Noble</span>
+                {/if}
+                {#if wish.link.includes('bestbuy.com')}
+                  <span>Best Buy</span>
                 {/if}
               </div>
             </div>

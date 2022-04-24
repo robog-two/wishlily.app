@@ -218,7 +218,8 @@
     background-color: black
     width: 100%
     border-radius: 20pt
-    text-align: center
+    text-align: left
+    padding-left: 20px
     margin-bottom: 25px
 
   .wishlist[type="color"]
@@ -234,10 +235,16 @@
     display: flex
     flex-direction: row-reverse
 
-  .close img
+  .close div
     width: 25pt
     height: 25pt
-    transform: translate(-5pt, 2pt)
+    transform: translate(-5pt, 3pt)
+    border-radius: 100%
+
+  .close div img
+    width: 100%
+    height: 100%
+    display: block
 </style>
 
 {#if statusMessage}
@@ -254,7 +261,9 @@
           {:then title}
           <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}?s=${title}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
             <div class="close">
-              <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>
+              <div style="background-color: {wishlist.color}">
+                <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>
+              </div>
             </div>
             <p style="color: {needsInvert(wishlist.color) ? 'white' : 'black'}">
               {title}
