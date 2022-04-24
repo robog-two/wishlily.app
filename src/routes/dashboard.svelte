@@ -216,7 +216,7 @@
     line-height: 30px
     height: calc(50px)
     background-color: black
-    width: 100%
+    width: calc(100% - 20px)
     overflow-x: hidden
     border-radius: calc(50px)
     text-align: left
