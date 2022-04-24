@@ -458,7 +458,7 @@
                     <img class="delete-icon" src={deleteIcon} alt="Delete"/>
                   </span>
                 {/if}
-                {#if wishlist.price}
+                {#if wish.price}
                   <span>{wish.price}</span>
                 {/if}
                 {#if wish.link.includes('amazon.com')}
