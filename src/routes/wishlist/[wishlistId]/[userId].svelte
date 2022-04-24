@@ -20,6 +20,7 @@
   let searchResults: any = undefined
   let chooseResult: Function | undefined = undefined
   let cancelSearch: Function | undefined = undefined
+  let cache
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
@@ -28,13 +29,14 @@
       await checkLogin()
     }
 
+    cache = await window.caches?.open('wishlily_cache')
     loadWishlistInfo()
-    reloadWishlist()
+    reloadWishlist(true)
   })
 
   async function loadWishlistInfo() {
     statusMessage = 'Loading ...'
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
+    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -44,24 +46,38 @@
         userId
       })
     })
+
+    // Cache stuff
+    const cacheName = `wishlistinfo_${wishlistId}_${userId}`
+    const cached = await cache?.match(cacheName)
+
+    // If not cached, fetch again!
+    const dbResponse = cached ?? await fetch(request)
+
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
       statusMessage = 'Error loading wishlist information!'
       console.log(await dbResponse.json())
       return
     }
-    const info = await dbResponse.json()
+
+    const info = await dbResponse.clone().json()
     title = await decrypt(info.title)
     if (decodeURIComponent($page.url.searchParams.get('s')) !== title) {
       goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}${window.location.hash}`)
     }
-    address = address === undefined ? undefined : await decrypt(info.address)
+    address = (info.address === undefined) ? undefined : await decrypt(info.address)
     color = info.color.toString().toLowerCase()
     statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
+
+    // Save it in the cache if it wasn't already
+    if (cached === undefined) {
+      cache?.put(cacheName, dbResponse)
+      console.log('Cached wishlist information (encrypted)')
+    }
   }
 
-  async function reloadWishlist() {
-    statusMessage = 'Loading ...'
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlist', {
+  async function reloadWishlist(useCache: boolean = false) {
+    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlist', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -71,14 +87,27 @@
         userId
       })
     })
+
+    // If we're allowed to use the cache, use it!
+    const cacheName = `wishlistitems_${wishlistId}_${userId}`
+    const cached = useCache ? await cache?.match(cacheName) : undefined
+    console.log(useCache && cache ? 'Using cache' : 'Fetching...')
+
+    const dbResponse = cached ?? await fetch(request)
+
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
       statusMessage = 'Error loading wishlist!'
       console.log(await dbResponse.json())
       return
     }
-    wishlist = (await dbResponse.json()).reverse()
+    wishlist = (await dbResponse.clone().json()).reverse()
     console.log(wishlist)
-    statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
+
+
+    // If the cache wasn't there, or we were forced to load it anew, store it!
+    if (cached === undefined) {
+      cache.put(cacheName, dbResponse)
+    }
   }
 
   async function search(query: string): Promise<any> {
@@ -116,7 +145,7 @@
     console.log(itemURL)
     addingItem = false
     itemURL = undefined
-    statusMessage = 'Finding item...'
+    statusMessage = 'Searching...'
     const productResponse = await fetch(`https://proxy.wishlily.app/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
       const json = await productResponse.json()
@@ -127,7 +156,11 @@
     const response = await productResponse.json()
     const product = response.isSearch ? await search(itemURLTemp) : response
     console.log(product)
-    statusMessage = "Adding item..."
+
+    statusMessage = 'Saving your wishlist...'
+
+    // Add it locally first, for instant feedback
+    wishlist.push(product)
 
     const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/add_item_to_wishlist', {
       method: 'POST',
@@ -151,8 +184,10 @@
       return
     }
 
-    statusMessage = (statusMessage === 'Adding item...') ? undefined : statusMessage
-    reloadWishlist()
+    statusMessage = (statusMessage === 'Saving your wishlist...') ? undefined : statusMessage
+
+    // Then, re-cache the wishlist
+    reloadWishlist(false)
   }
 
   async function deleteProduct(productId) {
@@ -199,7 +234,7 @@
     const c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c2);
     const shade = (parseInt(c[1],16)+parseInt(c[2], 16)+parseInt(c[3], 16))/3
 
-    if (shade >= 128) {
+    if (shade >= 180) {
       return false
     } else {
       return true

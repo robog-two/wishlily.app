@@ -12,14 +12,17 @@
   let listColor = '#ffffff'
   let addPage = 0
 
+  let cache
+
   onMount(async () => {
+    cache = await window.caches?.open('wishlily_cache')
     checkLogin()
-    reloadWishlists()
+    statusMessage = 'Loading ...'
+    reloadWishlists(true)
   })
 
-  async function reloadWishlists() {
-    statusMessage = 'Loading ...'
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlists', {
+  async function reloadWishlists(useCache: boolean = false) {
+    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlists', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -29,20 +32,33 @@
         userKey: window.localStorage.getItem('userKey')
       })
     })
+
+    // If we're allowed to use the cache, use it!
+    const cacheName = `wishlists_${window.localStorage.getItem('userId')}`
+    const cached = useCache ? await cache?.match(cacheName) : undefined
+    console.log(useCache && cache ? 'Using cache' : 'Fetching...')
+
+    const dbResponse = cached ?? await fetch(request)
+
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
       statusMessage = 'Error loading wishlists!'
       console.log(await dbResponse.json())
       return
     }
 
-    wishlists = await dbResponse.json()
+    wishlists = await dbResponse.clone().json()
 
     console.log(wishlists)
     statusMessage = undefined
+
+    // If the cache wasn't there, or we were forced to load it anew, store it!
+    if (cached === undefined) {
+      cache.put(cacheName, dbResponse)
+    }
   }
 
   async function addWishlist() {
-    statusMessage = 'Creating wishlist...'
+    statusMessage = 'Saving wishlists...'
 
     const tempListName = listName
     listName = undefined
@@ -74,9 +90,16 @@
       return
     }
 
+    // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
+    wishlists.push({
+      title: body.title,
+      color: body.color,
+      address: body.address
+    })
+
     statusMessage = undefined
-    reloadWishlists()
-    return false
+    // Reload to cache new wishlists for future use.
+    reloadWishlists(false)
   }
 
   function incrPage() {
@@ -95,7 +118,7 @@
     const c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
     const shade = (parseInt(c[1],16)+parseInt(c[2], 16)+parseInt(c[3], 16))/3
 
-    if (shade >= 128) {
+    if (shade >= 180) {
       return false
     } else {
       return true
@@ -121,8 +144,9 @@
       console.log(await dbResponse.json())
       throw new Error('')
     }
+
     statusMessage = undefined
-    reloadWishlists()
+    reloadWishlists(false)
   }
 </script>
 
