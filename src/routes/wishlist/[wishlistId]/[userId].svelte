@@ -252,6 +252,7 @@
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}" />
+  <meta name="theme-color" content="{color}" />
 </head>
 
 <style lang="sass">
