@@ -10,7 +10,7 @@
   import { text } from 'svelte/internal';
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
-  let color = decodeURIComponent($page.url.searchParams.get('c'))
+  let color = $page.url.searchParams.get('c') ? decodeURIComponent($page.url.searchParams.get('c')) : undefined
 
   let wishlist
   let itemURL = ''
