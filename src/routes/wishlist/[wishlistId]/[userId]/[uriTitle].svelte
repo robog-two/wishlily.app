@@ -450,8 +450,12 @@
       <h1 class="list-title">{title}</h1>
     {/if}
 
-    {#if address && addressDecrypted}
-      <h3 class="address">{address}</h3>
+    {#if address}
+      {#if addressDecrypted}
+        <h3 class="address">{address}</h3>
+      {:else}
+        <h3 class="address">Decrypting...</h3>
+      {/if}
     {/if}
 
     {#if wishlist}
