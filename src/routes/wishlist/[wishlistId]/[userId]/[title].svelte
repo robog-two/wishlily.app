@@ -1,23 +1,72 @@
+<script context="module">
+  export async function load({ params, fetch, session, stuff }) {
+    const { wishlistId, userId } = params
+    const infoRequest = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        wishlistId,
+        userId
+      })
+    })
+
+    const itemsRequest = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlist', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        wishlistId,
+        userId
+      })
+    })
+
+    const unifiedResponse = await Promise.all([fetch(infoRequest), fetch(itemsRequest)])
+    const infoResponse = unifiedResponse[0]
+    const itemsResponse = unifiedResponse[1]
+
+    const unifiedJSON = await Promise.all([infoResponse.json(), itemsResponse.json()])
+    const info = unifiedJSON[0]
+    const items = unifiedJSON[1]
+
+    console.log(info)
+    console.log(items)
+
+    const color = info.color.toString().toLowerCase()
+    const title = decodeURIComponent(params.title)
+    const realTitle = info.title
+    const address = info.address
+    const wishlist = items.reverse()
+
+    return {
+      props: { color, title, address, wishlist, realTitle },
+      status: 200
+    }
+  }
+</script>
+
 <script lang="ts">
   import { page } from '$app/stores'
   const { wishlistId, userId } = $page.params
-  import logo from '../../../images/logo.svg'
-  import deleteIcon from '../../../images/delete.svg'
-  import addIcon from '../../../images/plus.svg'
+  import logo from '../../../../images/logo.svg'
+  import deleteIcon from '../../../../images/delete.svg'
+  import addIcon from '../../../../images/plus.svg'
   import { onMount } from 'svelte'
-  import { checkLogin, decrypt } from '../../../scripts/keyMgmt';
+  import { checkLogin, decrypt } from '../../../../scripts/keyMgmt';
   import { goto } from '$app/navigation';
-  import { text } from 'svelte/internal';
+
+  // From Server
+  export let color, title, realTitle, address, wishlist
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
-  let color = $page.url.searchParams.get('c') ? decodeURIComponent($page.url.searchParams.get('c')) : undefined
 
-  let wishlist
   let itemURL = ''
+  let addressDecrypted = false
   let isLoggedIn = false
   let addingItem = false
   let statusMessage
-  let title, address
   let searchResults: any = undefined
   let chooseResult: Function | undefined = undefined
   let cancelSearch: Function | undefined = undefined
@@ -30,51 +79,14 @@
       await checkLogin()
     }
 
+    decryptWishlistInfo()
     cache = await window.caches?.open('wishlily_cache')
-    loadWishlistInfo()
-    reloadWishlist(true)
   })
 
-  async function loadWishlistInfo() {
-    statusMessage = 'Loading ...'
-    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        wishlistId,
-        userId
-      })
-    })
-
-    // Cache stuff
-    const cacheName = `wishlistinfo_${wishlistId}_${userId}`
-    const cached = await cache?.match(cacheName)
-
-    // If not cached, fetch again!
-    const dbResponse = cached ?? await fetch(request)
-
-    if (dbResponse.status < 200 || dbResponse.status >= 400) {
-      statusMessage = 'Error loading wishlist information!'
-      console.log(await dbResponse.json())
-      return
-    }
-
-    const info = await dbResponse.clone().json()
-    title = await decrypt(info.title)
-    if (decodeURIComponent($page.url.searchParams.get('s')) !== title) {
-      goto(`/wishlist/${wishlistId}/${userId}?s=${encodeURIComponent(title)}${window.location.hash}`)
-    }
-    address = (info.address === undefined) ? undefined : await decrypt(info.address)
-    color = info.color.toString().toLowerCase()
-    statusMessage = (statusMessage === 'Loading ...') ? undefined : statusMessage
-
-    // Save it in the cache if it wasn't already
-    if (cached === undefined) {
-      cache?.put(cacheName, dbResponse)
-      console.log('Cached wishlist information (encrypted)')
-    }
+  async function decryptWishlistInfo() {
+    title = await decrypt(realTitle)
+    address = (address === undefined) ? undefined : await decrypt(address)
+    addressDecrypted = true
   }
 
   async function reloadWishlist(useCache: boolean = false) {
@@ -438,7 +450,7 @@
       <h1 class="list-title">{title}</h1>
     {/if}
 
-    {#if address}
+    {#if address && addressDecrypted}
       <h3 class="address">{address}</h3>
     {/if}
 
