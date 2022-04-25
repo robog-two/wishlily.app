@@ -259,12 +259,13 @@
   <title>{title}</title>
   <meta property="og:title" content="{title}" />
   <meta property="og:description" content="If you're thinking of me, look no further!" />
+  <meta name="description" content="Find cheap products across shopping sites and save them for later. Share your dreams on WishLily." />
   <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:type" content="website" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="WISHLILY" />
-  <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}" />
+  <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}/{encodeURIComponent(title)}" />
   <meta name="theme-color" content="{color}" />
 </head>
 
