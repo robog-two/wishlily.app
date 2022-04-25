@@ -35,13 +35,12 @@
     console.log(items)
 
     const color = info.color.toString().toLowerCase()
-    const title = decodeURIComponent(params.title)
     const realTitle = info.title
     const address = info.address
     const wishlist = items.reverse()
 
     return {
-      props: { color, title, address, wishlist, realTitle },
+      props: { color, address, wishlist, realTitle },
       status: 200
     }
   }
@@ -49,16 +48,17 @@
 
 <script lang="ts">
   import { page } from '$app/stores'
-  const { wishlistId, userId } = $page.params
+  const { wishlistId, userId, uriTitle } = $page.params
   import logo from '../../../../images/logo.svg'
   import deleteIcon from '../../../../images/delete.svg'
   import addIcon from '../../../../images/plus.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../../scripts/keyMgmt';
-  import { goto } from '$app/navigation';
+
+  let title = decodeURIComponent(uriTitle)
 
   // From Server
-  export let color, title, realTitle, address, wishlist
+  export let color: string, realTitle: string, address: string, wishlist
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
@@ -66,11 +66,11 @@
   let addressDecrypted = false
   let isLoggedIn = false
   let addingItem = false
-  let statusMessage
+  let statusMessage: string
   let searchResults: any = undefined
   let chooseResult: Function | undefined = undefined
   let cancelSearch: Function | undefined = undefined
-  let cache
+  let cache: Cache
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
@@ -256,8 +256,8 @@
 </script>
 
 <head>
-  <title>{titleEmbed}</title>
-  <meta property="og:title" content="{titleEmbed}" />
+  <title>{title}</title>
+  <meta property="og:title" content="{title}" />
   <meta property="og:description" content="If you're thinking of me, look no further!" />
   <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
   <meta property="og:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />

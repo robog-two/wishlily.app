@@ -3,8 +3,6 @@ export async function get({ params, url }) {
   const title = decodeURIComponent(url.searchParams.get('s')) ?? 'Loading...'
   return {
     status: 302,
-    headers: {
-      location: `https://wishlily.app/wishlist/${wishlistId}/${userId}/${encodeURIComponent(title)}`
-    }
+    redirect: `https://wishlily.app/wishlist/${wishlistId}/${userId}/${encodeURIComponent(title)}`
   };
 }
