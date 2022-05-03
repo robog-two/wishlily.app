@@ -26,7 +26,7 @@
     }
 
     if (!window.localStorage.getItem('userId')) {
-      message = 'Logging in...'
+      message = 'Generating user key... Try tapping the screen to create more entropy.'
       let values: Uint32Array = new Uint32Array(30);
       await window.crypto.getRandomValues(values)
 
@@ -36,6 +36,8 @@
       }
 
       let userId = await window.crypto.randomUUID()
+
+      message = 'Logging in...'
 
       let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_user', {
         method: 'POST',
@@ -49,7 +51,7 @@
       })
 
       if (response.status !== 204) {
-        message = 'Login failed! Your token is corrupt.'
+        message = 'Login failed! Check connection!'
         console.log(await response.text())
         return
       } else {
