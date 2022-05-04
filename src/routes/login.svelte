@@ -26,16 +26,21 @@
     }
 
     if (!window.localStorage.getItem('userId')) {
-      message = 'Generating user key... Try tapping the screen to create more entropy.'
-      let values: Uint32Array = new Uint32Array(30);
-      await window.crypto.getRandomValues(values)
+      message = 'Generating user token pair...'
 
       let userKey: string = ''
-      for (let value of values) {
-        userKey = userKey + value.toString()
+
+      if (window.crypto?.getRandomValues !== undefined) {
+        let values: Uint32Array = new Uint32Array(30);
+        await window.crypto.getRandomValues(values)
+        for (let value of values) {
+          userKey = userKey + value.toString()
+        }
+      } else {
+        userKey = await (await fetch('/user/shims/key')).text()
       }
 
-      let userId = await window.crypto.randomUUID()
+      let userId = window.crypto.randomUUID !== undefined ? await window.crypto?.randomUUID() : await (await fetch('/user/shims/uuid')).text()
 
       message = 'Logging in...'
 
