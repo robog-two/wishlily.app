@@ -6,7 +6,7 @@
   let message = 'Please confirm to delete your data.'
 
   onMount(async () => {
-    if (prompt('WARNING! Clearing data means that you will lose access to ALL of your wishlists, FOREVER. Type "confirm" to clear all data.') === 'confirm') {
+    if (confirm('WARNING! Clearing data means that you will lose access to ALL of your wishlists, FOREVER. Press OK to clear all data.') === true) {
       message = 'Deleting data...'
 
       try {
