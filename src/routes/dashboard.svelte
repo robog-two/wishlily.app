@@ -9,8 +9,14 @@
   let statusMessage
   let wishlists
   let listName, listAddress
-  let listColor = '#ffffff'
+  let listColor = '#000000'
   let addPage = 0
+
+  let colors = [
+    ['#fae36b', '#bca8e3', '#cdf39e', '#bbdef0', '#fdc4dd'],
+    ['#fdab1c', '#7843ed', '#00a6a6', '#3086ed', '#e9424e'],
+    ['#a54200', '#5023a3', '#3f826d', '#2b4570', '#811d19']
+  ]
 
   let cache
 
@@ -103,6 +109,15 @@
   }
 
   function incrPage() {
+    if (addPage === 1 && listName === undefined) {
+      statusMessage = 'You must name your list.'
+    }
+
+    if (addPage === 3 && listColor === '#000000') {
+      statusMessage = 'You must select a color.'
+    }
+
+    if ((addPage !== 1 || listName) && (addPage !== 3 || (listColor && listColor !== '#000000'))) {
     addPage++
     const checkExist = setInterval(async () => {
       const textbox = (document.getElementById('searchbox-text') as HTMLInputElement)
@@ -112,6 +127,7 @@
         textbox.select()
       }
     }, 100);
+  }
   }
 
   function needsInvert(color: string): boolean {
@@ -166,6 +182,7 @@
     display: block
 
   .floaty-status
+    z-index: 10
     top: 20px
     left: 20px
     position: fixed
@@ -272,6 +289,27 @@
     width: 100%
     height: 100%
     display: block
+
+  .color-selector
+    width: 20vw
+    min-width: 320px
+
+  .color-row
+    display: flex
+    flex-direction: row
+    width: 100%
+    margin-bottom: 20px
+
+  .color-button
+    aspect-ratio: 1
+    width: calc(20% - 15px)
+    margin-right: 20px
+    border-radius: 100%
+
+  .color-button-chosen
+    width: calc(20% - 21px)
+    aspect-ratio: 1
+    border: 3px solid black
 </style>
 
 {#if statusMessage}
@@ -312,10 +350,18 @@
               <input id="searchbox-text" class="searchbox-text" placeholder="Address (Optional)" bind:value="{listAddress}" />
             {:else}
               <span>Color:</span>
-              <input type="color" id="searchbox-text" class="searchbox-text" bind:value="{listColor}" />
+              <div class="color-selector">
+                {#each colors as colorRow}
+                  <div class="color-row">
+                    {#each colorRow as color}
+                      <div class='color-button{listColor === color ? ' color-button-chosen' : ''}' style="background-color: {color}" on:click="{() => {listColor = color}}"></div>
+                    {/each}
+                  </div>
+                {/each}
+              </div>
             {/if}
             <br style="height: 20px"/>
-            <input type="submit" class="searchbox-text" value="Create" style="{addPage >= 3 ? '' : 'display: none'}"/>
+            <input type="submit" class="searchbox-text" value="Create" style="color: {needsInvert(listColor ?? '#000000') ? 'white' : 'black'}; background-color: {listColor ?? '#000000'}; {addPage >= 3 ? '' : 'display: none'}"/>
           </form>
         </div>
       </div>

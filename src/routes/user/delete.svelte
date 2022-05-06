@@ -65,7 +65,7 @@
       window.localStorage.clear()
     }
 
-    goto('/login')
+    goto('/')
   })
 </script>
 
