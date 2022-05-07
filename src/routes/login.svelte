@@ -64,23 +64,23 @@
         window.localStorage.setItem('userKey', userKey)
       }
     } else {
-      message = 'Refreshing login...'
-      let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/confirm_user', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          userId: window.localStorage.getItem('userId'),
-          userKey: window.localStorage.getItem('userKey')
-        })
-      })
+      // message = 'Refreshing login...'
+      // let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/confirm_user', {
+      //   method: 'POST',
+      //   headers: {
+      //     'Content-Type': 'application/json'
+      //   },
+      //   body: JSON.stringify({
+      //     userId: window.localStorage.getItem('userId'),
+      //     userKey: window.localStorage.getItem('userKey')
+      //   })
+      // })
 
-      if (response.status !== 204) {
-        message = 'Login failed! Your token is corrupt.'
-        console.log(await response.text())
-        return
-      }
+      // if (response.status !== 204) {
+      //   message = 'Login failed! Your token is corrupt.'
+      //   console.log(await response.text())
+      //   return
+      // }
     }
 
     if (window.location.hash?.startsWith('https://wishlily.app')) {

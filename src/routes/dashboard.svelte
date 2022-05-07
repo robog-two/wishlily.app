@@ -12,6 +12,7 @@
   let listName, listAddress
   let listColor = '#000000'
   let addPage = 0
+  let editingId = undefined
 
   let colors = [
     ['#fae36b', '#bca8e3', '#cdf39e', '#bbdef0', '#fdc4dd'],
@@ -25,7 +26,13 @@
     cache = await window.caches?.open('wishlily_cache')
     checkLogin()
     statusMessage = 'Loading ...'
-    reloadWishlists(true)
+
+    const isReload = (window.performance.navigation && window.performance.navigation.type === 1) ||
+    window.performance
+      .getEntriesByType('navigation')
+      .map((nav) => nav.entryType)
+      .includes('reload')
+    reloadWishlists(!isReload)
   })
 
   async function reloadWishlists(useCache: boolean = false) {
@@ -68,13 +75,15 @@
     statusMessage = 'Saving wishlists...'
 
     const tempListName = listName
-    listName = undefined
     const tempListColor = listColor
-    listColor = undefined
     const tempListAddress = listAddress
-    listAddress = undefined
+    const tempEditingId: string | undefined = editingId
+
+    // Close the create wishlist screen
+    cancelCreation()
 
     const body = {
+      id: tempEditingId,
       userId: window.localStorage.getItem('userId'),
       userKey: window.localStorage.getItem('userKey'),
       title: await encrypt(tempListName),
@@ -84,7 +93,22 @@
 
     console.log(body)
 
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_wishlist', {
+    if (tempEditingId) {
+      await wishlists.forEach(it => {
+        if (it.id === tempEditingId) {
+          it.color = tempListColor
+          it.address = tempListAddress
+          it.title = tempListName
+        }
+      })
+
+      // Svelte update
+      wishlists = [...wishlists]
+    }
+
+    console.log(wishlists)
+
+    const dbResponse = await fetch(`https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/${tempEditingId ? 'edit_wishlist' : 'create_wishlist'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -93,16 +117,18 @@
     })
 
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
-      statusMessage = JSON.parse((await dbResponse.json())?.error)?.message ?? 'Error creating wishlist.'
+      statusMessage = JSON.parse((await dbResponse.json())?.error)?.message ?? 'Error saving wishlist.'
       return
     }
 
-    // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
-    wishlists.push({
-      title: body.title,
-      color: body.color,
-      address: body.address
-    })
+    if (editingId === undefined) {
+      // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
+      wishlists.push({
+        title: body.title,
+        color: body.color,
+        address: body.address
+      })
+    }
 
     statusMessage = undefined
     // Reload to cache new wishlists for future use.
@@ -167,7 +193,23 @@
   }
 
   async function editWishlist(id) {
-    // TODO: Implement!
+    editingId = id
+    const list = await wishlists.find(it => {
+      return it.id === id
+    })
+    console.log(list)
+    listAddress = await decrypt(list.address)
+    listColor = list.color
+    listName = await decrypt(list.title)
+    incrPage()
+  }
+
+  async function cancelCreation() {
+    listAddress = undefined
+    listColor = undefined
+    listName = undefined
+    editingId = undefined
+    addPage = 0
   }
 </script>
 
@@ -337,7 +379,7 @@
           <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}/${encodeURIComponent(title)}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
             <div class="close">
               <div style="background-color: {wishlist.color}">
-                <!-- <img on:click|preventDefault="{() => {editWishlist(wishlist.id)}}" src="{editIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Edit"/> -->
+                <img on:click|preventDefault="{() => {editWishlist(wishlist.id)}}" src="{editIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Edit"/>
                 <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>
               </div>
             </div>
@@ -350,9 +392,9 @@
     {/if}
 
     {#if addPage > 0}
-      <div class="vignette searchbox" style="background-color: #fffffff3" on:click|self="{() => {addPage = 0}}">
+      <div class="vignette searchbox" style="background-color: #fffffff3" on:click|self="{cancelCreation}">
         <div class="center">
-          <form on:submit|preventDefault="{() => {incrPage(); if (addPage >= 4) {addPage = 0;addWishlist()}}}" action="">
+          <form on:submit|preventDefault="{() => {incrPage(); if (addPage >= 4) {addWishlist()}}}" action="">
             {#if addPage === 1}
               <span>List Name:</span>
               <input id="searchbox-text" class="searchbox-text" placeholder="My Dream Gifts" bind:value="{listName}" />
@@ -372,7 +414,7 @@
               </div>
             {/if}
             <br style="height: 20px"/>
-            <input type="submit" class="searchbox-text" value="Create" style="color: {needsInvert(listColor ?? '#000000') ? 'white' : 'black'}; background-color: {listColor ?? '#000000'}; {addPage >= 3 ? '' : 'display: none'}"/>
+            <input type="submit" class="searchbox-text" value="{editingId ? 'Update Wishlist' : 'Create'}" style="color: {needsInvert(listColor ?? '#000000') ? 'white' : 'black'}; background-color: {listColor ?? '#000000'}; {addPage >= 3 ? '' : 'display: none'}"/>
           </form>
         </div>
       </div>
