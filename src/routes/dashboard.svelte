@@ -1,10 +1,11 @@
 <script lang="ts">
   import { goto } from '$app/navigation'
-  import { checkLogin, decrypt, encrypt } from '../scripts/keyMgmt';
-  import { onMount } from 'svelte';
-  import logo from '../images/logo_large_format.svg';
-  import deleteIcon from '../images/delete.svg';
-  import editIcon from '../images/edit.svg';
+  import { checkLogin, decrypt, encrypt } from '../scripts/keyMgmt'
+  import { onMount } from 'svelte'
+  import logo from '../images/logo_large_format.svg'
+  import embed from '../images/embed.png'
+  import deleteIcon from '../images/delete.svg'
+  import editIcon from '../images/edit.svg'
   import addIcon from '../images/plus.svg'
 
   let statusMessage
@@ -214,7 +215,18 @@
 </script>
 
 <head>
+  <title>WISHLILY</title>
+  <meta property="og:title" content="WishLily Dashboard" />
   <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
+  <meta property="og:description" content="Find and share your dream products." />
+  <meta name="description" content="Find cheap products across shopping sites and save them for later, or share them with friends." />
+  <meta property="twitter:image" content="{embed}" />
+  <meta property="og:image" content="{embed}" />
+  <meta property="og:type" content="website" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="WISHLILY" />
+  <meta property="og:url" content="https://wishlily.app/dashboard" />
+  <meta name="theme-color" content="#fe4993" />
 </head>
 
 <style lang="sass">

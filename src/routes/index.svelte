@@ -1,6 +1,7 @@
 <script lang="ts">
   import { goto, prefetch } from '$app/navigation'
   import { onMount } from 'svelte';
+  import embed from '../images/embed.png'
 
   onMount(async () => {
     prefetch('/login')
@@ -9,6 +10,21 @@
     }
   })
 </script>
+
+<head>
+  <title>WISHLILY</title>
+  <meta property="og:title" content="WishLily" />
+  <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
+  <meta property="og:description" content="Find and share your dream products." />
+  <meta name="description" content="Find cheap products across shopping sites and save them for later, or share them with friends." />
+  <meta property="twitter:image" content="{embed}" />
+  <meta property="og:image" content="{embed}" />
+  <meta property="og:type" content="website" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="og:site_name" content="WISHLILY" />
+  <meta property="og:url" content="https://wishlily.app/" />
+  <meta name="theme-color" content="#fe4993" />
+</head>
 
 <style>
   h1 {
