@@ -392,14 +392,14 @@
         {#await decrypt(wishlist.title)}
           Loading...
           {:then title}
-          <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}/${encodeURIComponent(title)}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
+          <a on:click|self="{() => {statusMessage = 'Opening...'}}" class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}/${encodeURIComponent(title)}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
             <div class="close">
               <div style="background-color: {wishlist.color}">
                 <img on:click|preventDefault="{() => {editWishlist(wishlist.id)}}" src="{editIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Edit"/>
                 <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>
               </div>
             </div>
-            <p style="color: {needsInvert(wishlist.color) ? 'white' : 'black'}">
+            <p on:click|self="{() => {statusMessage = 'Opening...'}}" style="color: {needsInvert(wishlist.color) ? 'white' : 'black'}">
               {title}
             </p>
           </a>
