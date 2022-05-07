@@ -213,6 +213,10 @@
   }
 </script>
 
+<head>
+  <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
+</head>
+
 <style lang="sass">
   .wrapper
     width: calc(100% - 30px)
@@ -253,10 +257,10 @@
     left: 0
     position: fixed
     overflow-y: scroll
+    padding: 0 15px 0 15px
 
-  .vignette .center
-    padding-top: 100px
-    padding-bottom: 40px
+  .vignette.searchbox
+    padding: 0
 
   .add-item-container
     bottom: 0

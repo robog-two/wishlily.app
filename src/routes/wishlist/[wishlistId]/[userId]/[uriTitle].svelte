@@ -258,6 +258,7 @@
 <head>
   <title>{title}</title>
   <meta property="og:title" content="{title}" />
+  <link rel="icon" href="/user/icon/{color.slice(1)}" sizes="any" type="image/svg+xml" />
   <meta property="og:description" content="If you're thinking of me, look no further!" />
   <meta name="description" content="Find cheap products across shopping sites and save them for later. Share your dreams on WishLily." />
   <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />
@@ -379,10 +380,10 @@
     left: 0
     position: fixed
     overflow-y: scroll
+    padding: 40px 15px 40px 15px
 
-  .vignette .center
-    padding-top: 100px
-    padding-bottom: 40px
+  .vignette.searchbox
+    padding: 0
 
   .add-item-container
     bottom: 0
@@ -523,9 +524,9 @@
     {/if}
   </div>
   {#if searchResults}
-    <div class="vignette" style="background-color: {color}f3" on:click="{cancelSearch()}">
-      <div class="center">
-      <span class="search-instructions">Touch an item to add, touch anywhere else to cancel.</span>
+    <div class="vignette" style="background-color: {color}f3" on:click|self="{cancelSearch()}">
+      <div class="center" on:click|self="{cancelSearch()}">
+      <span class="search-instructions">Touch an item to add.</span>
       {#each searchResults as result}
         <div class="wish" style="color: black">
           <div class="corset">
