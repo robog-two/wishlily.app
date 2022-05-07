@@ -8,6 +8,7 @@
   import { onMount } from 'svelte'
   import logo from '../images/logo_large_format.svg'
   import deleteIcon from '../images/delete.svg'
+  import cta from '../images/cta_no_wishlists.svg'
   import editIcon from '../images/edit.svg'
   import addIcon from '../images/plus.svg'
 
@@ -406,7 +407,7 @@
 <div class="wrapper">
   <div class="center">
     <img class="logo" src="{logo}" alt="Wish Lily" />
-    {#if wishlists}
+    {#if wishlists && wishlists.length > 0}
       {#each wishlists as wishlist}
         {#await decrypt(wishlist.title)}
           Loading...
@@ -424,6 +425,8 @@
           </a>
         {/await}
       {/each}
+    {:else}
+      <img class="center" alt="Tap the plus to get started." src="{cta}">
     {/if}
 
     {#if addPage > 0}

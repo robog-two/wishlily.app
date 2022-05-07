@@ -49,6 +49,7 @@
 <script lang="ts">
   import { page } from '$app/stores'
   const { wishlistId, userId, uriTitle } = $page.params
+  import cta from '../../../../images/cta_no_items.svg'
   import logo from '../../../../images/logo.svg'
   import deleteIcon from '../../../../images/delete.svg'
   import addIcon from '../../../../images/plus.svg'
@@ -469,7 +470,7 @@
       {/if}
     {/if}
 
-    {#if wishlist}
+    {#if wishlist && wishlist.length > 0}
       <div class="wishes-container">
         {#each wishlist as wish}
           <div class="wish" style="color: black">
@@ -515,6 +516,11 @@
           </div>
         {/each}
       </div>
+    {:else}
+      <br />
+      <br />
+      <br />
+      <img class="center" alt="Tap the plus to get started." src="{cta}">
     {/if}
 
     {#if isLoggedIn && !addingItem}

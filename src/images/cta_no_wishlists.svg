@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="85.492401mm"
+   height="40.030937mm"
+   viewBox="0 0 85.492402 40.030937"
+   version="1.1"
+   id="svg5"
+   inkscape:version="1.1.2 (0a00cf5339, 2022-02-04)"
+   sodipodi:docname="cta_no_wishlists.svg"
+   inkscape:export-filename="/home/robog/Documents/WishLily/png/embed.png"
+   inkscape:export-xdpi="100"
+   inkscape:export-ydpi="100"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview7"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:document-units="mm"
+     showgrid="false"
+     inkscape:snap-bbox="true"
+     inkscape:snap-bbox-midpoints="false"
+     inkscape:bbox-paths="false"
+     inkscape:bbox-nodes="true"
+     inkscape:snap-bbox-edge-midpoints="false"
+     inkscape:snap-center="true"
+     inkscape:snap-others="false"
+     inkscape:snap-object-midpoints="true"
+     inkscape:snap-nodes="true"
+     inkscape:snap-intersection-paths="true"
+     inkscape:object-nodes="true"
+     inkscape:zoom="0.728464"
+     inkscape:cx="82.365086"
+     inkscape:cy="-43.24167"
+     inkscape:window-width="1712"
+     inkscape:window-height="894"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs2">
+    <rect
+       x="241.62241"
+       y="149.8503"
+       width="366.50522"
+       height="70.966812"
+       id="rect24267" />
+    <linearGradient
+       inkscape:collect="always"
+       id="linearGradient41453">
+      <stop
+         style="stop-color:#4b2ca9;stop-opacity:1"
+         offset="0"
+         id="stop41449" />
+      <stop
+         style="stop-color:#a700ff;stop-opacity:1"
+         offset="0.47598436"
+         id="stop41747" />
+      <stop
+         style="stop-color:#ff4790;stop-opacity:0.98431373"
+         offset="1"
+         id="stop41451" />
+    </linearGradient>
+    <rect
+       x="134.7282"
+       y="384.32932"
+       width="308.02435"
+       height="91.661835"
+       id="rect31155" />
+    <rect
+       x="-160.00941"
+       y="196.94641"
+       width="456.80072"
+       height="423.61588"
+       id="rect17071" />
+    <rect
+       x="182.24094"
+       y="-67.223602"
+       width="173.87187"
+       height="106.50767"
+       id="rect5954" />
+    <mask
+       maskUnits="userSpaceOnUse"
+       id="mask3748">
+      <rect
+         style="fill:#ffffff;fill-opacity:1;stroke-width:0.264583"
+         id="rect3750"
+         width="100"
+         height="177.86662"
+         x="54.999996"
+         y="2.5"
+         rx="10"
+         ry="10" />
+    </mask>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient41453"
+       id="linearGradient41455"
+       x1="-34.249161"
+       y1="198.23366"
+       x2="-35.320995"
+       y2="253.22952"
+       gradientUnits="userSpaceOnUse" />
+  </defs>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(-85.365664,-57.201153)">
+    <g
+       id="g33324">
+      <text
+         xml:space="preserve"
+         transform="matrix(0.41533503,0,0,0.41533503,99.590539,-25.13223)"
+         id="text17069"
+         style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:40px;line-height:0.95;font-family:'Space Grotesk';-inkscape-font-specification:'Space Grotesk';text-align:center;white-space:pre;shape-inside:url(#rect17071);fill:url(#linearGradient41455);fill-opacity:1;stroke:none"
+         x="177.3822"
+         y="0"><tspan
+           x="-36.169159"
+           y="226.79366"
+           id="tspan33363">Share your
+</tspan><tspan
+           x="-7.8091736"
+           y="264.79366"
+           id="tspan33365">dreams.</tspan></text>
+      <text
+         xml:space="preserve"
+         transform="matrix(0.26458333,0,0,0.26458333,21.235337,49.435205)"
+         id="text24265"
+         style="font-style:normal;font-weight:normal;font-size:26.6667px;line-height:1.25;font-family:sans-serif;white-space:pre;shape-inside:url(#rect24267);fill:#000000;fill-opacity:1;stroke:none"><tspan
+           x="241.62305"
+           y="174.51631"
+           id="tspan33369"><tspan
+             style="font-family:'Readex Pro';-inkscape-font-specification:'Readex Pro'"
+             id="tspan33367">Tap the (+) to get started.</tspan></tspan></text>
+    </g>
+  </g>
+</svg>
