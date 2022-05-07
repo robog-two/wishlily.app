@@ -255,7 +255,7 @@
   }
 </script>
 
-<head>
+<svelte:head>
   <title>{title}</title>
   <meta property="og:title" content="{title}" />
   <link rel="icon" href="/user/icon/{color.slice(1)}" sizes="any" type="image/svg+xml" />
@@ -268,7 +268,7 @@
   <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/{wishlistId}/{userId}/{encodeURIComponent(title)}" />
   <meta name="theme-color" content="{color}" />
-</head>
+</svelte:head>
 
 <style lang="sass">
   .wrapper

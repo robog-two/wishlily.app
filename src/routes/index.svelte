@@ -11,7 +11,7 @@
   })
 </script>
 
-<head>
+<svelte:head>
   <title>WISHLILY</title>
   <meta property="og:title" content="WishLily" />
   <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
@@ -24,7 +24,7 @@
   <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/" />
   <meta name="theme-color" content="#fe4993" />
-</head>
+</svelte:head>
 
 <style>
   h1 {

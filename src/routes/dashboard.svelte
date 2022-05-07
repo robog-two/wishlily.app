@@ -1,9 +1,12 @@
+<script lang="ts" context="module">
+  import embed from '../images/embed.png'
+</script>
+
 <script lang="ts">
   import { goto } from '$app/navigation'
   import { checkLogin, decrypt, encrypt } from '../scripts/keyMgmt'
   import { onMount } from 'svelte'
   import logo from '../images/logo_large_format.svg'
-  import embed from '../images/embed.png'
   import deleteIcon from '../images/delete.svg'
   import editIcon from '../images/edit.svg'
   import addIcon from '../images/plus.svg'
@@ -214,7 +217,7 @@
   }
 </script>
 
-<head>
+<svelte:head>
   <title>WISHLILY</title>
   <meta property="og:title" content="WishLily Dashboard" />
   <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
@@ -227,7 +230,7 @@
   <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/dashboard" />
   <meta name="theme-color" content="#fe4993" />
-</head>
+</svelte:head>
 
 <style lang="sass">
   .wrapper
