@@ -4,6 +4,7 @@
   import { onMount } from 'svelte';
   import logo from '../images/logo_large_format.svg';
   import deleteIcon from '../images/delete.svg';
+  import editIcon from '../images/edit.svg';
   import addIcon from '../images/plus.svg'
 
   let statusMessage
@@ -164,6 +165,10 @@
     statusMessage = undefined
     reloadWishlists(false)
   }
+
+  async function editWishlist(id) {
+    // TODO: Implement!
+  }
 </script>
 
 <style lang="sass">
@@ -280,15 +285,17 @@
     flex-direction: row-reverse
 
   .close div
-    width: 30px
+    width: 60px
     height: 30px
     transform: translate(-20px, 10px)
-    border-radius: 100%
+    background-color: none
+    display: flex
+    flex-direction: row
 
   .close div img
-    width: 100%
+    width: 50%
     height: 100%
-    display: block
+    display: inline-block
 
   .color-selector
     width: 20vw
@@ -306,10 +313,13 @@
     margin-right: 20px
     border-radius: 100%
 
+  .color-button:last-child
+    margin-right: 0
+
   .color-button-chosen
-    width: calc(20% - 21px)
+    width: calc(20% - 39px)
     aspect-ratio: 1
-    border: 3px solid black
+    border: 12px solid black
 </style>
 
 {#if statusMessage}
@@ -327,6 +337,7 @@
           <a class="wishlist" href="{`/wishlist/${wishlist.id}/${window.localStorage.getItem('userId')}/${encodeURIComponent(title)}#${window.localStorage.getItem('encryptionKey')}`}" style="display: block; background-color: {wishlist.color}">
             <div class="close">
               <div style="background-color: {wishlist.color}">
+                <!-- <img on:click|preventDefault="{() => {editWishlist(wishlist.id)}}" src="{editIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Edit"/> -->
                 <img on:click|preventDefault="{() => {deleteWishlist(wishlist.id)}}" src="{deleteIcon}" style="{needsInvert(wishlist.color) ? 'filter: invert(100%)' : ''}" alt="Delete"/>
               </div>
             </div>
@@ -354,7 +365,7 @@
                 {#each colors as colorRow}
                   <div class="color-row">
                     {#each colorRow as color}
-                      <div class='color-button{listColor === color ? ' color-button-chosen' : ''}' style="background-color: {color}" on:click="{() => {listColor = color}}"></div>
+                      <div aria-label="Color {color}" class='color-button{listColor === color ? ' color-button-chosen' : ''}' style="border-color: {color}; background-color: {listColor === color ? (needsInvert(listColor ?? '#000000') ? 'white' : 'black') : color}" on:click="{() => {listColor = color}}"></div>
                     {/each}
                   </div>
                 {/each}
@@ -367,7 +378,7 @@
       </div>
     {:else}
       <div class="add-item-container" style="background: linear-gradient(0deg, #ffffffff 0%, #ffffff00 100%)">
-        <img class="add-item" src="{addIcon}" alt="Add new product"  on:click="{incrPage}"/>
+        <img class="add-item" src="{addIcon}" alt="Create wishlist"  on:click="{incrPage}"/>
       </div>
     {/if}
   </div>
