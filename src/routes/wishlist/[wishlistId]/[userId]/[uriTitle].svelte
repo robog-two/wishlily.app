@@ -415,6 +415,8 @@
     text-align: center
     color: #c2c2c2
     margin-bottom: 80px
+    padding-left: 0
+    padding-right: 0
 
   @media screen and (max-width: 425px)
     .searchbox-text

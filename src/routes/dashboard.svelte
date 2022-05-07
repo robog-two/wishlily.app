@@ -289,6 +289,8 @@
     text-align: center
     color: #c2c2c2
     margin-bottom: 80px
+    padding-left: 0
+    padding-right: 0
 
   @media screen and (max-width: 425px)
     .searchbox-text
@@ -311,7 +313,7 @@
     line-height: 30px
     height: calc(50px)
     background-color: black
-    width: calc(100% - 20px)
+    width: calc(100% - 24px)
     overflow-x: hidden
     border-radius: calc(50px)
     text-align: left
