@@ -1,10 +1,10 @@
 import { goto, prefetch } from '$app/navigation'
 import { Buffer } from 'buffer/index.js'
 
-export async function checkLogin() {
+export function checkLogin() {
   prefetch('/login')
 
-  if (!window.localStorage.getItem('encryptionKey')) {
+  if (window.localStorage.getItem('encryptionKey') === undefined || window.localStorage.getItem('userKey') === undefined || window.localStorage.getItem('userId') === undefined) {
     goto(`/login#${encodeURIComponent(window.location.href)}`)
   } else {
     window.location.hash = window.localStorage.getItem('encryptionKey')
