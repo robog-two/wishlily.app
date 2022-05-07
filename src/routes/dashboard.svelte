@@ -221,7 +221,9 @@
 
   .center
     margin: 0 auto 0 auto
+    width: 100%
     max-width: 425px
+    overflow-x: hidden
 
   .logo
     width: 50%
@@ -262,6 +264,7 @@
     position: fixed
     width: 100vw
     height: 40px
+    overflow: visible
     display: flex
     flex-direction: row-reverse
 
@@ -286,6 +289,10 @@
     text-align: center
     color: #c2c2c2
     margin-bottom: 80px
+
+  @media screen and (max-width: 425px)
+    .searchbox-text
+      border-radius: 0
 
   .searchbox span
     text-align: center
@@ -338,6 +345,12 @@
     width: 50%
     height: 100%
     display: inline-block
+
+  .color-selector-outer
+    display: flex
+    flex-direction: row
+    justify-content: center
+    width: 100%
 
   .color-selector
     width: 20vw
@@ -403,14 +416,16 @@
               <input id="searchbox-text" class="searchbox-text" placeholder="Address (Optional)" bind:value="{listAddress}" />
             {:else}
               <span>Color:</span>
-              <div class="color-selector">
-                {#each colors as colorRow}
-                  <div class="color-row">
-                    {#each colorRow as color}
-                      <div aria-label="Color {color}" class='color-button{listColor === color ? ' color-button-chosen' : ''}' style="border-color: {color}; background-color: {listColor === color ? (needsInvert(listColor ?? '#000000') ? 'white' : 'black') : color}" on:click="{() => {listColor = color}}"></div>
-                    {/each}
-                  </div>
-                {/each}
+              <div class="color-selector-outer">
+                <div class="color-selector">
+                  {#each colors as colorRow}
+                    <div class="color-row">
+                      {#each colorRow as color}
+                        <div aria-label="Color {color}" class='color-button{listColor === color ? ' color-button-chosen' : ''}' style="border-color: {color}; background-color: {listColor === color ? (needsInvert(listColor ?? '#000000') ? 'white' : 'black') : color}" on:click="{() => {listColor = color}}"></div>
+                      {/each}
+                    </div>
+                  {/each}
+                </div>
               </div>
             {/if}
             <br style="height: 20px"/>

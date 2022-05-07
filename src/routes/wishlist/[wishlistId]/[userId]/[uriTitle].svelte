@@ -277,7 +277,9 @@
 
   .center
     margin: 0 auto 0 auto
+    width: 100%
     max-width: 425px
+    overflow-x: hidden
 
   .lily
     aspect-ratio: 1.149
@@ -388,6 +390,7 @@
     position: fixed
     width: 100vw
     height: 40px
+    overflow: visible
     display: flex
     flex-direction: row-reverse
 
@@ -412,6 +415,10 @@
     text-align: center
     color: #c2c2c2
     margin-bottom: 80px
+
+  @media screen and (max-width: 425px)
+    .searchbox-text
+      border-radius: 0
 
   .searchbox span
     text-align: center
