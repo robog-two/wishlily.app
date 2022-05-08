@@ -21,7 +21,7 @@ export async function get({ params }) {
       }
     }
   } else {
-    const c = /^?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
+    const c = /^([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(color);
     const shade = (parseInt(c[1],16)+parseInt(c[2], 16)+parseInt(c[3], 16))/3
 
     let stroke = '#fff'
