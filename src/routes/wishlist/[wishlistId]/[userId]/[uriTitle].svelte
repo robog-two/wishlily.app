@@ -520,7 +520,7 @@
       <br />
       <br />
       <br />
-      <img class="center" alt="Tap the plus to add a product." src="{cta}">
+      <img style="{needsInvert(color) ? 'filter: invert(100%)' : ''}" class="center" alt="Tap the plus to add a product." src="{cta}">
     {/if}
 
     {#if isLoggedIn && !addingItem}
