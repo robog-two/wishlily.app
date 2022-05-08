@@ -67,9 +67,10 @@
       return
     }
 
-    wishlists = await dbResponse.clone().json()
+    const tempWishlists = await dbResponse.clone().json()
+    wishlists = [...tempWishlists]
 
-    console.log(wishlists)
+    console.log(tempWishlists)
     statusMessage = undefined
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
@@ -128,7 +129,7 @@
       return
     }
 
-    if (editingId === undefined) {
+    if (tempEditingId === undefined) {
       // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
       wishlists.push({
         title: body.title,
