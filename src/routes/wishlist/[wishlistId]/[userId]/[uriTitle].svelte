@@ -520,7 +520,7 @@
       <br />
       <br />
       <br />
-      <img class="center" alt="Tap the plus to get started." src="{cta}">
+      <img class="center" alt="Tap the plus to add a product." src="{cta}">
     {/if}
 
     {#if isLoggedIn && !addingItem}

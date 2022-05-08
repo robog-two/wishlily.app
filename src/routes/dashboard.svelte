@@ -29,7 +29,9 @@
 
   onMount(async () => {
     checkLogin()
-    cache = await window.caches?.open('wishlily_cache')
+    try {
+      cache = await window.caches?.open('wishlily_cache')
+    } catch (e) { console.log(e) }
     statusMessage = 'Loading ...'
 
     const isReload = (window.performance.navigation && window.performance.navigation.type === 1) ||
@@ -230,7 +232,7 @@
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="WISHLILY" />
   <meta property="og:url" content="https://wishlily.app/dashboard" />
-  <meta name="theme-color" content="#fe4993" />
+  <meta name="theme-color" content="#ffffff" />
 </svelte:head>
 
 <style lang="sass">
