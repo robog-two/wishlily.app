@@ -390,7 +390,6 @@
   .color-button
     aspect-ratio: 1 / 1
     width: calc(20% - 15px)
-    min-height: 24.44px // Safari
     margin-right: 20px
     border-radius: 100%
 
@@ -406,6 +405,8 @@
   @media screen and (max-width: 1600px)
     .color-button-chosen
       height: 24.44px // Safari's aspect ratio impl is incomplete. Workaround
+    .color-button
+      height: 48px // Safari
 </style>
 
 {#if statusMessage}
