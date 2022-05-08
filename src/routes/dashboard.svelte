@@ -375,7 +375,8 @@
     width: 100%
 
   .color-selector
-    width: 320px
+    width: 20vw
+    min-width: 320px
 
   .color-row
     display: flex
@@ -384,9 +385,9 @@
     margin-bottom: 20px
 
   .color-button
-    width: 49px
-    height: 49px
-    --moz-aspect-ratio: 1
+    aspect-ratio: 1
+    width: calc(20% - 15px)
+    max-height: 0
     margin-right: 20px
     border-radius: 100%
 
@@ -394,9 +395,9 @@
     margin-right: 0
 
   .color-button-chosen
-    width: 25px
-    height: 25px
-    --moz-aspect-ratio: 1
+    width: calc(20% - 39px)
+    aspect-ratio: 1
+    max-height: 0
     border: 12px solid black
 </style>
 
