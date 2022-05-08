@@ -153,16 +153,16 @@
     }
 
     if ((addPage !== 1 || listName) && (addPage !== 3 || (listColor && listColor !== '#000000'))) {
-    addPage++
-    const checkExist = setInterval(async () => {
-      const textbox = (document.getElementById('searchbox-text') as HTMLInputElement)
-      if (textbox) {
-        clearInterval(checkExist)
-        textbox.focus()
-        textbox.select()
-      }
-    }, 100);
-  }
+      addPage++
+      const checkExist = setInterval(async () => {
+        const textbox = (document.getElementById('searchbox-text') as HTMLInputElement)
+        if (textbox) {
+          clearInterval(checkExist)
+          textbox.focus()
+          textbox.select()
+        }
+      }, 100);
+    }
   }
 
   function needsInvert(color: string): boolean {
@@ -390,7 +390,7 @@
   .color-button
     aspect-ratio: 1 / 1
     width: calc(20% - 15px)
-    min-height: 0
+    min-height: 24.44px // Safari
     margin-right: 20px
     border-radius: 100%
 
@@ -400,8 +400,12 @@
   .color-button-chosen
     width: calc(20% - 39px)
     aspect-ratio: 1 / 1
-    min-height: 0
+    min-height: 0 // Safari
     border: 12px solid black
+
+  @media screen and (max-width: 1600px)
+    .color-button-chosen
+      height: 24.44px // Safari's aspect ratio impl is incomplete. Workaround
 </style>
 
 {#if statusMessage}
