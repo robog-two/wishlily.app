@@ -259,7 +259,7 @@
 <svelte:head>
   <title>{title}</title>
   <meta property="og:title" content="{title}" />
-  <link rel="icon" href="/user/icon/{color.slice(1)}" sizes="any" type="image/svg+xml" />
+  <link rel="icon" href="/user/icon/new/{color.slice(1)}" sizes="any" type="image/svg+xml" />
   <meta property="og:description" content="If you're thinking of me, look no further!" />
   <meta name="description" content="Find cheap products across shopping sites and save them for later. Share your dreams on WishLily." />
   <meta property="twitter:image" content="https://proxy.wishlily.app/embed?wishlistId={wishlistId}&userId={userId}" />

@@ -14,7 +14,6 @@
 <svelte:head>
   <title>WISHLILY</title>
   <meta property="og:title" content="WishLily" />
-  <link rel="icon" href="/user/icon/ffffff" sizes="any" type="image/svg+xml" />
   <meta property="og:description" content="Find and share your dream products." />
   <meta name="description" content="Find cheap products across shopping sites and save them for later, or share them with friends." />
   <meta property="twitter:image" content="{embed}" />
