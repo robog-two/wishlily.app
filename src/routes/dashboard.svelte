@@ -28,8 +28,8 @@
   let cache
 
   onMount(async () => {
-    cache = await window.caches?.open('wishlily_cache')
     checkLogin()
+    cache = await window.caches?.open('wishlily_cache')
     statusMessage = 'Loading ...'
 
     const isReload = (window.performance.navigation && window.performance.navigation.type === 1) ||
@@ -385,9 +385,9 @@
     margin-bottom: 20px
 
   .color-button
-    aspect-ratio: 1
+    aspect-ratio: 1 / 1
     width: calc(20% - 15px)
-    max-height: 0
+    min-height: 0
     margin-right: 20px
     border-radius: 100%
 
@@ -396,8 +396,8 @@
 
   .color-button-chosen
     width: calc(20% - 39px)
-    aspect-ratio: 1
-    max-height: 0
+    aspect-ratio: 1 / 1
+    min-height: 0
     border: 12px solid black
 </style>
 

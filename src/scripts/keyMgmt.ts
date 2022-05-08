@@ -4,7 +4,7 @@ import { Buffer } from 'buffer/index.js'
 export function checkLogin() {
   prefetch('/login')
 
-  if (window.localStorage.getItem('encryptionKey') === undefined || window.localStorage.getItem('userKey') === undefined || window.localStorage.getItem('userId') === undefined) {
+  if (window.localStorage.getItem('encryptionKey') === undefined || window.localStorage.getItem('userKey') === undefined || window.localStorage.getItem('userId') === undefined || window.localStorage.getItem('encryptionKey') === null || window.localStorage.getItem('userKey') === null || window.localStorage.getItem('userId') === null) {
     goto(`/login#${encodeURIComponent(window.location.href)}`)
   } else {
     window.location.hash = window.localStorage.getItem('encryptionKey')
