@@ -403,10 +403,10 @@
     border: 12px solid black
 
   @media screen and (max-width: 1600px)
-    .color-button-chosen
-      height: 24.44px // Safari's aspect ratio impl is incomplete. Workaround
     .color-button
       height: 48px // Safari
+    .color-button-chosen
+      height: 24.44px // Safari's aspect ratio impl is incomplete. Workaround
 </style>
 
 {#if statusMessage}
