@@ -224,6 +224,7 @@
 <svelte:head>
   <title>WISHLILY</title>
   <meta property="og:title" content="WishLily Dashboard" />
+  <link rel="icon" href="/favicon.png" sizes="any" type="image/png" />
   <meta property="og:description" content="Find and share your dream products." />
   <meta name="description" content="Find cheap products across shopping sites and save them for later, or share them with friends." />
   <meta property="twitter:image" content="{embed}" />
