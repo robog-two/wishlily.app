@@ -39,7 +39,14 @@
       .getEntriesByType('navigation')
       .map((nav) => nav.entryType)
       .includes('reload')
-    reloadWishlists(!isReload)
+    await reloadWishlists(!isReload)
+
+    if (wishlists.length > 0 && !(await navigator.storage.persisted())) {
+      // RE-Prompt the user to make sure that their user token
+      // continues to be stored, now that they actually have data.
+      // Don't await, it's not the end of the world if they deny.
+      navigator.storage.persist()
+    }
   })
 
   async function reloadWishlists(useCache: boolean = false) {
@@ -89,6 +96,13 @@
 
     // Close the create wishlist screen
     cancelCreation()
+
+    // Prompt the user to make sure that their user token
+    // continues to be stored, now that they actually have data.
+    if (!(await navigator.storage.persisted())) {
+      // Don't await, it's not the end of the world if they deny.
+      navigator.storage.persist()
+    }
 
     const body = {
       id: tempEditingId,
@@ -223,17 +237,17 @@
 
 <svelte:head>
   <title>WISHLILY</title>
-  <meta property="og:title" content="WishLily Dashboard" />
+  <meta property="og:title" content="WISHLILY Dashboard" />
   <link rel="icon" href="/favicon.png" sizes="any" type="image/png" />
-  <meta property="og:description" content="Find and share your dream products." />
-  <meta name="description" content="Find cheap products across shopping sites and save them for later, or share them with friends." />
+  <meta property="og:description" content="SHOP WITHOUT IMPULSE. aggregate, organize & save for later" />
+  <meta name="description" content="SHOP WITHOUT IMPULSE. aggregate, organize & save for later" />
   <meta property="twitter:image" content="{embed}" />
   <meta property="og:image" content="{embed}" />
   <meta property="og:type" content="website" />
   <meta property="twitter:card" content="summary_large_image" />
   <meta property="og:site_name" content="WISHLILY" />
-  <meta property="og:url" content="https://wishlily.app/dashboard" />
-  <meta name="theme-color" content="#ffffff" />
+  <meta property="og:url" content="https://wishlily.app/" />
+  <meta name="theme-color" content="#190014" />
 </svelte:head>
 
 <style lang="sass">
