@@ -11,7 +11,7 @@
   let fakeLogIndex = 0
 
   onMount(async () => {
-    if (window.location.href !== 'no-auto-login') {
+    if (window.location.hash !== 'no-auto-login') {
       prefetch('/login')
       if (window.localStorage.getItem('userId')) {
         goto('/login')
