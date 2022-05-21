@@ -6,12 +6,13 @@
   import swishes from '../images/swishes.svg'
 
   let showStuff = false
+  let doGlitch = false
   let fakeLog = ['']
   const fakeLogFull = 'Enabling EMOTION_ENGINE|Integrating ExiTel(TM) OPC_ram storage technology...|Calculating desire matrix (0%)|Calculating desire matrix (36%)|Calculating desire matrix (58%)|Calculating desire matrix (62%)|Calculating desire matrix (69%)|Calculating desire matrix (85%)|Calculating desire matrix (97%)|Synthesizing 5-flupentisol trio-ethylanalate...|Engaging injection arm...|Initiating consciousness distillation sequence|Conscious Release [==>                    ]|Conscious Release [=====>                 ]|Conscious Release [=======>               ]|WARNING > PAIN ABOVE THRESHHOLD, RECEPTORS INHIBITED|Conscious Release [=======>               ]|Conscious Release [============>          ]|Conscious Release [===============>       ]|Conscious Release [=====================> ]|WARNING > APPROACHING HIGHER DIMENSIONAL THOUGHT|Compensating. Activating additional coprocessors: 618 to 36916|Conscious Release [=======================] Done!|Brain shutting down (Note: Consciousness is now unrecoverable.)|Distilling desire...........Analysis Complete!|Rebooting....Memory Recovery Initiated.......Conscious Flow Initialized|'
   let fakeLogIndex = 0
 
   onMount(async () => {
-    if (window.location.hash !== 'no-auto-login') {
+    if (window.location.hash !== '#no-auto-login') {
       prefetch('/login')
       if (window.localStorage.getItem('userId')) {
         goto('/login')
@@ -29,6 +30,10 @@
         fakeLog[fakeLog.length-1] += '.'
       }
       fakeLogIndex++
+
+      if (fakeLog.length > 25) {
+        doGlitch = true
+      }
 
       if (fakeLogIndex >= fakeLogFull.length) {
         clearInterval(logInterval)
@@ -71,7 +76,6 @@
     margin-bottom: -60px
     animation: 0.3s glitch 1 step-start
 
-
   @keyframes glitch
     10%
       transform: translate(10px, 0px)
@@ -94,6 +98,7 @@
     font-size: 85px
     text-align: center
     margin-top: 0
+    margin-bottom: 45px
 
   .brain-margin img
     width: 20vh
@@ -121,13 +126,26 @@
     position: fixed
     top: 20px
     left: 20vw
-    animation: 0.3s glitch 1 step-start
+
+  .glitch
+    animation: 0.5s glitch 1 step-start
 
   .swishes
     display: block
     margin-left: auto
     margin-right: auto
-    width: 20
+    width: 500px
+
+  .login
+    color: #190014
+    font-family: 'Space Grotesk', sans-serif
+    line-height: 1rem
+    margin-bottom: -16px
+    font-size: 20px
+    transform: translate(1px, 50px) rotate(90deg)
+    text-align: center
+    text-decoration: none
+    display: block
 </style>
 
 <div class="wrapper" style="{showStuff ? '' : 'padding: 0; width: 100vw; height: 100vh'}">
@@ -138,13 +156,14 @@
       </div>
       <h1 class="large">WISHLILY</h1>
       <h2 class="cta1">DISTILL YOUR DESIRE</h2>
+      <a href="/login" class="login">Login</a>
       <img class="swishes" alt="three colored lines swooping downward" src="{swishes}" />
     {:else}
       <h2 class="cta1">SCANNING CONSCIOUSNESS</h2>
       <div class="brain-margin">
         <img alt="Spinning low-poly brain scan simulation in a retro style" src="{brain}"/>
       </div>
-      <p class="console">
+      <p class="console{doGlitch ? ' glitch' : ''}">
         {#each fakeLog as item}
           {item}
           <br/>

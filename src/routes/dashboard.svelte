@@ -429,7 +429,7 @@
 
 <div class="wrapper">
   <div class="center">
-    <img class="logo" src="{logo}" alt="Wish Lily" />
+    <img class="logo" on:click="{() => {goto('/#no-auto-login')}}" src="{logo}" alt="Wish Lily" />
     {#if wishlists && wishlists.length > 0}
       {#each wishlists as wishlist}
         {#await decrypt(wishlist.title)}
