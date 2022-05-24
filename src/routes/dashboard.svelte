@@ -142,17 +142,13 @@ import { domain } from '../scripts/isdev';
     })
 
     if (dbResponse.status < 200 || dbResponse.status >= 400) {
-      statusMessage = JSON.parse((await dbResponse.json())?.error)?.message ?? 'Error saving wishlist.'
+      statusMessage = (await dbResponse.text()) ?? 'Error saving wishlist.'
       return
     }
 
     if (tempEditingId === undefined) {
       // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
-      wishlists.push({
-        title: body.title,
-        color: body.color,
-        address: body.address
-      })
+      wishlists.push((await dbResponse.json()).wishlist)
     }
 
     statusMessage = undefined
