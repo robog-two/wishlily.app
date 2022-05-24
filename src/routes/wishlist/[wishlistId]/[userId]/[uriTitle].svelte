@@ -165,16 +165,7 @@
     itemURL = undefined
     statusMessage = 'Searching...'
 
-    let urlTest
-    let isUrl = true
-    try {
-      urlTest = new URL(itemURL);
-    } catch (_) {
-      isUrl = false
-    }
-    isUrl = isUrl ? (urlTest.protocol === 'http:' || urlTest.protocol === 'https:') : false
-
-    if (!isUrl) {
+    if (!(itemURLTemp.includes('http://') || itemURLTemp.includes('https://') || itemURLTemp.includes('.com/') || itemURLTemp.includes('.app/') || itemURLTemp.includes('.net/'))) {
       itemURLTemp = (await search(itemURLTemp)).link
     }
 
