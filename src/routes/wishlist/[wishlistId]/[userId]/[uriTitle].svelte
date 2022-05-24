@@ -57,7 +57,7 @@
   import addIcon from '../../../../images/plus.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../../scripts/keyMgmt';
-import { domain } from '../../../../scripts/isdev';
+  import { domain } from '../../../../scripts/isdev';
 
   let title = decodeURIComponent(uriTitle)
 

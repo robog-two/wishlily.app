@@ -9,7 +9,7 @@ export async function isDev(): Promise<boolean> {
 export async function domain(product: string): Promise<string> {
   const which = (await isDev()) ? 1 : 0
   return ({
-    mathilda: ['https://proxy.wishlily.app', 'http://localhost:8080'],
-    db: ['https://db.wishlily.app', 'http://localhost:8081'],
+    mathilda: ['https://proxy.wishlily.app', 'http://127.0.0.1:8080'],
+    db: ['https://db.wishlily.app', 'http://127.0.0.1:8081'],
   })[product]?.[which] ?? 'wishlily.app'
 }

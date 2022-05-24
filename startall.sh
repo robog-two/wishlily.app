@@ -7,7 +7,7 @@ cd ../wishlily-db
 screen -dmS wlly-db ~/.deno/bin/denon run --allow-read --allow-write --allow-net --allow-env $(pwd)/wishlily-db.ts
 cd ../wishlily.app
 clear
-screen -S wlly-svelte npm run devreal
+screen -S wlly-svelte npm run devreal -- --open
 screen -XS wlly-mathilda quit
 screen -XS wlly-db quit
 rm -rf .env
