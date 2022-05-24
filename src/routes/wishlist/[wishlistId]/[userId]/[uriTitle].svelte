@@ -159,11 +159,24 @@ import { domain } from '../../../../scripts/isdev';
   }
 
   async function addProduct() {
-    const itemURLTemp = itemURL
+    let itemURLTemp = itemURL
     console.log(itemURL)
     addingItem = false
     itemURL = undefined
     statusMessage = 'Searching...'
+
+    let urlTest
+    let isUrl = true
+    try {
+      urlTest = new URL(itemURL);
+    } catch (_) {
+      isUrl = false
+    }
+    isUrl = isUrl ? (urlTest.protocol === 'http:' || urlTest.protocol === 'https:') : false
+
+    if (!isUrl) {
+      itemURLTemp = (await search(itemURLTemp)).link
+    }
 
     const dbResponse = await fetch(`${await domain('db')}/add_item_to_wishlist`, {
       method: 'POST',
