@@ -1,7 +1,7 @@
 <script context="module">
   export async function load({ params, fetch, session, stuff }) {
     const { wishlistId, userId } = params
-    const infoRequest = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/get_wishlist_info', {
+    const infoRequest = new Request(`${await domain('db')}/get_wishlist_info`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -12,7 +12,7 @@
       })
     })
 
-    const itemsRequest = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlist', {
+    const itemsRequest = new Request(`${await domain('db')}/list_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -55,6 +55,7 @@
   import addIcon from '../../../../images/plus.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../../scripts/keyMgmt';
+import { domain } from '../../../../scripts/isdev';
 
   let title = decodeURIComponent(uriTitle)
 
@@ -91,7 +92,7 @@
   }
 
   async function reloadWishlist(useCache: boolean = false) {
-    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlist', {
+    const request = new Request(`${await domain('db')}/list_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -125,7 +126,7 @@
   }
 
   async function search(query: string): Promise<any> {
-    const productResponse = await fetch(`https://proxy.wishlily.app/generic/search?q=${encodeURIComponent(query)}`)
+    const productResponse = await fetch(`${await domain('mathilda')}/generic/search?q=${encodeURIComponent(query)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
       statusMessage = 'Error parsing search results.'
       console.log(await productResponse.json())
@@ -160,7 +161,7 @@
     addingItem = false
     itemURL = undefined
     statusMessage = 'Searching...'
-    const productResponse = await fetch(`https://proxy.wishlily.app/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
+    const productResponse = await fetch(`${await domain('mathilda')}/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
     if (productResponse.status < 200 || productResponse.status >= 400) {
       const json = await productResponse.json()
       console.log(json)
@@ -176,7 +177,7 @@
 
     statusMessage = 'Saving your wishlist...'
 
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/add_item_to_wishlist', {
+    const dbResponse = await fetch(`${await domain('db')}/add_item_to_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -208,7 +209,7 @@
     console.log(productId)
     statusMessage = 'Deleting item...'
 
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_item_from_wishlist', {
+    const dbResponse = await fetch(`${await domain('db')}/delete_item_from_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

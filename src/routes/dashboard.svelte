@@ -11,6 +11,7 @@
   import cta from '../images/cta_no_wishlists.svg'
   import editIcon from '../images/edit.svg'
   import addIcon from '../images/plus.svg'
+import { domain } from '../scripts/isdev';
 
   let statusMessage
   let wishlists
@@ -50,7 +51,7 @@
   })
 
   async function reloadWishlists(useCache: boolean = false) {
-    const request = new Request('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlists', {
+    const request = new Request(`${await domain('db')}/list_wishlists`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -130,7 +131,7 @@
 
     console.log(wishlists)
 
-    const dbResponse = await fetch(`https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/${tempEditingId ? 'edit_wishlist' : 'create_wishlist'}`, {
+    const dbResponse = await fetch(`${await domain('db')}/${tempEditingId ? 'edit_wishlist' : 'create_wishlist'}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
@@ -193,7 +194,7 @@
   async function deleteWishlist(id) {
     if (!confirm('Are you sure you want to delete this wishlist?')) return
     statusMessage = 'Deleting wishlist...'
-    const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_wishlist', {
+    const dbResponse = await fetch(`${await domain('db')}/delete_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

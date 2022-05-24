@@ -4,7 +4,7 @@ export async function get() {
   return {
     status: 200,
     body: {
-      isDev: isDev()
+      isDev: import.meta.env.VITE_ENVIRONMENT === 'development'
     }
   }
 }

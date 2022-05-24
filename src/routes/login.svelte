@@ -2,6 +2,7 @@
   import { onMount } from 'svelte'
   import { goto, prefetch } from '$app/navigation'
   import { Buffer } from 'buffer/index.js'
+  import { domain } from '../scripts/isdev'
 
   let message = ''
 
@@ -44,7 +45,7 @@
 
       message = 'Logging in...'
 
-      let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/create_user', {
+      let response = await fetch(`${await domain('db')}/create_user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -55,7 +56,7 @@
         })
       })
 
-      if (response.status !== 204) {
+      if (response.status < 200 || response.status > 400) {
         message = 'Login failed! Check connection!'
         console.log(await response.text())
         return
@@ -65,7 +66,7 @@
       }
     } else {
       // message = 'Refreshing login...'
-      // let response = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/confirm_user', {
+      // let response = await fetch(`${await domain('db')}/confirm_user`, {
       //   method: 'POST',
       //   headers: {
       //     'Content-Type': 'application/json'

@@ -2,6 +2,7 @@
   import { goto } from "$app/navigation";
   import { checkLogin, decrypt } from "../../scripts/keyMgmt";
   import { onMount } from "svelte";
+  import { domain } from '../../scripts/isdev';
 
   let message = 'Please confirm to delete your data.'
 
@@ -10,7 +11,7 @@
       message = 'Deleting data...'
 
       try {
-        let dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/list_wishlists', {
+        let dbResponse = await fetch(`${await domain('db')}/list_wishlists`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
@@ -31,7 +32,7 @@
 
         for (const wishlist of wishlists) {
           console.log(wishlist)
-          dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_wishlist', {
+          dbResponse = await fetch(`${await domain('db')}/delete_wishlist`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json'
@@ -52,7 +53,7 @@
       } catch (e) {
       }
 
-      const dbResponse = await fetch('https://data.mongodb-api.com/app/wishlily-website-krmwb/endpoint/delete_user', {
+      const dbResponse = await fetch(`${await domain('db')}/delete_user`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
