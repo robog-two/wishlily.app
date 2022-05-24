@@ -4,7 +4,8 @@
     const infoRequest = new Request(`${await domain('db')}/get_wishlist_info`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         wishlistId,
@@ -15,7 +16,8 @@
     const itemsRequest = new Request(`${await domain('db')}/list_wishlist`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         wishlistId,
@@ -95,7 +97,8 @@ import { domain } from '../../../../scripts/isdev';
     const request = new Request(`${await domain('db')}/list_wishlist`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         wishlistId,
@@ -161,35 +164,18 @@ import { domain } from '../../../../scripts/isdev';
     addingItem = false
     itemURL = undefined
     statusMessage = 'Searching...'
-    const productResponse = await fetch(`${await domain('mathilda')}/generic/product?id=${encodeURIComponent(itemURLTemp)}`)
-    if (productResponse.status < 200 || productResponse.status >= 400) {
-      const json = await productResponse.json()
-      console.log(json)
-      statusMessage = json.message ?? "Error parsing item."
-      return
-    }
-    const response = await productResponse.json()
-    const product = response.isSearch ? await search(itemURLTemp) : response
-    console.log(product)
-
-    // Add it locally first, for instant feedback
-    wishlist.push(product)
-
-    statusMessage = 'Saving your wishlist...'
 
     const dbResponse = await fetch(`${await domain('db')}/add_item_to_wishlist`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         wishlistId,
         userId,
         userKey: window.localStorage.getItem('userKey'),
-        title: product.title,
-        cover: product.cover,
-        price: product.price,
-        link: product.link
+        link: itemURLTemp
       })
     })
     addingItem = false
@@ -199,7 +185,9 @@ import { domain } from '../../../../scripts/isdev';
       return
     }
 
-    statusMessage = (statusMessage === 'Saving your wishlist...') ? undefined : statusMessage
+    wishlist.push((await dbResponse.json()).embed)
+
+    statusMessage = (statusMessage === 'Searching...') ? undefined : statusMessage
 
     // Then, re-cache the wishlist
     reloadWishlist(false)
@@ -212,7 +200,8 @@ import { domain } from '../../../../scripts/isdev';
     const dbResponse = await fetch(`${await domain('db')}/delete_item_from_wishlist`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         wishlistId,
@@ -228,7 +217,7 @@ import { domain } from '../../../../scripts/isdev';
     }
 
     statusMessage = undefined
-    reloadWishlist()
+    reloadWishlist(false)
     return false
   }
 

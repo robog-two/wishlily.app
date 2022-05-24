@@ -48,7 +48,8 @@
       let response = await fetch(`${await domain('db')}/create_user`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
         },
         body: JSON.stringify({
           userId,
@@ -69,7 +70,8 @@
       // let response = await fetch(`${await domain('db')}/confirm_user`, {
       //   method: 'POST',
       //   headers: {
-      //     'Content-Type': 'application/json'
+      //     'Content-Type': 'application/json',
+      //     'Origin': 'https://wishlily.app'
       //   },
       //   body: JSON.stringify({
       //     userId: window.localStorage.getItem('userId'),

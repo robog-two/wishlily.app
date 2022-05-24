@@ -54,7 +54,8 @@ import { domain } from '../scripts/isdev';
     const request = new Request(`${await domain('db')}/list_wishlists`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         userId: window.localStorage.getItem('userId'),
@@ -134,7 +135,8 @@ import { domain } from '../scripts/isdev';
     const dbResponse = await fetch(`${await domain('db')}/${tempEditingId ? 'edit_wishlist' : 'create_wishlist'}`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify(body)
     })
@@ -197,7 +199,8 @@ import { domain } from '../scripts/isdev';
     const dbResponse = await fetch(`${await domain('db')}/delete_wishlist`, {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
       },
       body: JSON.stringify({
         userId: window.localStorage.getItem('userId'),

@@ -14,7 +14,8 @@
         let dbResponse = await fetch(`${await domain('db')}/list_wishlists`, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json'
+            'Content-Type': 'application/json',
+            'Origin': 'https://wishlily.app'
           },
           body: JSON.stringify({
             userId: window.localStorage.getItem('userId'),
@@ -35,7 +36,8 @@
           dbResponse = await fetch(`${await domain('db')}/delete_wishlist`, {
             method: 'POST',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Origin': 'https://wishlily.app'
             },
             body: JSON.stringify({
               userId: window.localStorage.getItem('userId'),
@@ -56,7 +58,8 @@
       const dbResponse = await fetch(`${await domain('db')}/delete_user`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Origin': 'https://wishlily.app'
         },
         body: JSON.stringify({
           userId: window.localStorage.getItem('userId'),
