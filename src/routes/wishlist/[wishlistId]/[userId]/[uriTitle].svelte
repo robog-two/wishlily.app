@@ -165,7 +165,7 @@
     itemURL = undefined
     statusMessage = 'Searching...'
 
-    if (!(itemURLTemp.includes('http://') || itemURLTemp.includes('https://') || itemURLTemp.includes('.com/') || itemURLTemp.includes('.app/') || itemURLTemp.includes('.net/'))) {
+    if (!(itemURLTemp.includes('http://') || itemURLTemp.includes('https://'))) {
       itemURLTemp = (await search(itemURLTemp)).link
     }
 
@@ -328,6 +328,7 @@
     border-top-left-radius: 30px
     border-top-right-radius: 30px
     width: 100%
+    aspect-ratio: 2
     height: auto
 
   .corset
@@ -484,22 +485,22 @@
                 {#if wish.price}
                   <span>{wish.price}</span>
                 {/if}
-                {#if wish.link.includes('amazon.com')}
+                {#if wish?.link?.includes('amazon.com')}
                   <span>Amazon</span>
                 {/if}
-                {#if wish.link.includes('etsy.com')}
+                {#if wish?.link?.includes('etsy.com')}
                   <span>Etsy</span>
                 {/if}
-                {#if wish.link.includes('target.com')}
+                {#if wish?.link?.includes('target.com')}
                   <span>Target</span>
                 {/if}
-                {#if wish.link.includes('walmart.com')}
+                {#if wish?.link?.includes('walmart.com')}
                   <span>Walmart</span>
                 {/if}
-                {#if wish.link.includes('barnesandnoble.com')}
+                {#if wish?.link?.includes('barnesandnoble.com')}
                   <span>Barnes & Noble</span>
                 {/if}
-                {#if wish.link.includes('bestbuy.com')}
+                {#if wish?.link?.includes('bestbuy.com')}
                   <span>Best Buy</span>
                 {/if}
               </div>
