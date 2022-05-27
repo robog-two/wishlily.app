@@ -66,7 +66,6 @@ import { domain } from '../scripts/isdev';
     // If we're allowed to use the cache, use it!
     const cacheName = `wishlists_${window.localStorage.getItem('userId')}`
     const cached = useCache ? await cache?.match(cacheName) : undefined
-    console.log(useCache && cache ? 'Using cache' : 'Fetching...')
 
     const dbResponse = cached ?? await fetch(request)
 
@@ -79,7 +78,6 @@ import { domain } from '../scripts/isdev';
     const tempWishlists = await dbResponse.clone().json()
     wishlists = [...tempWishlists]
 
-    console.log(tempWishlists)
     statusMessage = undefined
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
@@ -115,8 +113,6 @@ import { domain } from '../scripts/isdev';
       address: tempListAddress === undefined ? undefined : await encrypt(tempListAddress)
     }
 
-    console.log(body)
-
     if (tempEditingId) {
       await wishlists.forEach(it => {
         if (it.id === tempEditingId) {
@@ -129,8 +125,6 @@ import { domain } from '../scripts/isdev';
       // Svelte update
       wishlists = [...wishlists]
     }
-
-    console.log(wishlists)
 
     const dbResponse = await fetch(`${await domain('db')}/${tempEditingId ? 'edit_wishlist' : 'create_wishlist'}`, {
       method: 'POST',
@@ -219,7 +213,6 @@ import { domain } from '../scripts/isdev';
     const list = await wishlists.find(it => {
       return it.id === id
     })
-    console.log(list)
     listAddress = await decrypt(list.address)
     listColor = list.color
     listName = await decrypt(list.title)

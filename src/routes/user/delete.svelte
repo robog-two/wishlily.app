@@ -29,7 +29,6 @@
         }
 
         const wishlists = await dbResponse.json()
-        console.log(wishlists)
 
         for (const wishlist of wishlists) {
           console.log(wishlist)

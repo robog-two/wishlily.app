@@ -33,7 +33,6 @@ async function getKey(): Promise<CryptoKey> {
 export async function decrypt(text: string): Promise<string> {
   try {
     if (!text.startsWith('client_side_enc,')) {
-      console.log(await encrypt(text))
       return text
     } else {
       const sliced = text.slice(16).split(',')
@@ -58,8 +57,6 @@ export async function encrypt(text: string): Promise<string> {
     await getKey(),
     Buffer.from(text, 'utf8') as ArrayBuffer
   )).toString('hex')
-
-  console.log(encrypted)
 
   return `client_side_enc,${encrypted},${Buffer.from(iv).toString('hex')}`
 }

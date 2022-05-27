@@ -33,9 +33,6 @@
     const info = unifiedJSON[0]
     const items = unifiedJSON[1]
 
-    console.log(info)
-    console.log(items)
-
     const color = info.color.toString().toLowerCase()
     const realTitle = info.title
     const address = info.address
@@ -109,7 +106,6 @@
     // If we're allowed to use the cache, use it!
     const cacheName = `wishlistitems_${wishlistId}_${userId}`
     const cached = useCache ? await cache?.match(cacheName) : undefined
-    console.log(useCache && cache ? 'Using cache' : 'Fetching...')
 
     const dbResponse = cached ?? await fetch(request)
 
@@ -119,8 +115,6 @@
       return
     }
     wishlist = (await dbResponse.clone().json()).reverse()
-    console.log(wishlist)
-
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
     if (cached === undefined) {
@@ -160,13 +154,15 @@
 
   async function addProduct() {
     let itemURLTemp = itemURL
-    console.log(itemURL)
     addingItem = false
     itemURL = undefined
     statusMessage = 'Searching...'
 
-    if (!(itemURLTemp.includes('http://') || itemURLTemp.includes('https://'))) {
+    const matches = itemURLTemp.match(/https?:\/\/(?:[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*[a-z][a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*\.[a-z0-9.\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]+|[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]+\.[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*[a-z][a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*)(?:\/[a-z0-9\-._~:/?#\[\]@!\$&'\(\)\*\+;%=]+|\/?)/ig)
+    if (matches.length === 0) {
       itemURLTemp = (await search(itemURLTemp)).link
+    } else {
+      itemURLTemp = matches[0]
     }
 
     const dbResponse = await fetch(`${await domain('db')}/add_item_to_wishlist`, {
@@ -198,7 +194,6 @@
   }
 
   async function deleteProduct(productId) {
-    console.log(productId)
     statusMessage = 'Deleting item...'
 
     const dbResponse = await fetch(`${await domain('db')}/delete_item_from_wishlist`, {
