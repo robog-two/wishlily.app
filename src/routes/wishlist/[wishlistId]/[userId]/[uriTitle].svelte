@@ -159,7 +159,7 @@
     statusMessage = 'Searching...'
 
     const matches = itemURLTemp.match(/https?:\/\/(?:[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*[a-z][a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*\.[a-z0-9.\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]+|[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]+\.[a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*[a-z][a-z0-9\-_ßàÁâãóôþüúðæåïçèõöÿýòäœêëìíøùîûñé]*)(?:\/[a-z0-9\-._~:/?#\[\]@!\$&'\(\)\*\+;%=]+|\/?)/ig)
-    if (matches.length === 0) {
+    if (!matches || matches.length === 0) {
       itemURLTemp = (await search(itemURLTemp)).link
     } else {
       itemURLTemp = matches[0]
