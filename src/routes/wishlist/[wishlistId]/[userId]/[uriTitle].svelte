@@ -13,7 +13,7 @@
       })
     })
 
-    const itemsRequest = new Request(`${await domain('db')}/list_wishlist`, {
+    const itemsRequest = new Request(`${await domain('db')}/list_products_in_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -51,6 +51,7 @@
   import cta from '../../../../images/cta_no_items.svg'
   import logo from '../../../../images/logo.svg'
   import deleteIcon from '../../../../images/delete.svg'
+  import repairingImg from '../../../../images/repairing.svg'
   import addIcon from '../../../../images/plus.svg'
   import { onMount } from 'svelte'
   import { checkLogin, decrypt } from '../../../../scripts/keyMgmt';
@@ -69,9 +70,11 @@
   let addingItem = false
   let statusMessage: string
   let searchResults: any = undefined
+  let repairing = false
   let chooseResult: Function | undefined = undefined
   let cancelSearch: Function | undefined = undefined
   let cache: Cache
+  let socket: WebSocket
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
@@ -82,6 +85,31 @@
 
     decryptWishlistInfo()
     cache = await window.caches?.open('wishlily_cache')
+
+    // Open a websocket to refresh any changes made on another device
+    socket = new WebSocket(`${await domain('db-ws')}/product-update-websocket`)
+    socket.addEventListener('open', () => {
+      socket.send(`${wishlistId},${userId}|register`)
+    })
+    socket.addEventListener('message', async (event: MessageEvent) => {
+      switch(event.data.split('|')[0]) {
+        case 'reload':
+          // Reload without the cache
+          reloadWishlist(false)
+          break;
+        case 'upgrade-begin':
+          repairing = true
+          statusMessage = '0%'
+          break;
+        case 'upgrade-percentage':
+          statusMessage = '' + event.data.split('|')[1] + '%'
+          break;
+        case 'upgrade-finish':
+          repairing = false
+          statusMessage = undefined
+          break;
+      }
+    })
   })
 
   async function decryptWishlistInfo() {
@@ -91,7 +119,7 @@
   }
 
   async function reloadWishlist(useCache: boolean = false) {
-    const request = new Request(`${await domain('db')}/list_wishlist`, {
+    const request = new Request(`${await domain('db')}/list_products_in_wishlist`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -191,6 +219,8 @@
 
     // Then, re-cache the wishlist
     reloadWishlist(false)
+    // and tell our friends
+    socket?.send(`${wishlistId},${userId}|reload`)
   }
 
   async function deleteProduct(productId) {
@@ -216,7 +246,9 @@
     }
 
     statusMessage = undefined
+    // Reload without cache & tell our friends
     reloadWishlist(false)
+    socket?.send(`${wishlistId},${userId}|reload`)
     return false
   }
 
@@ -322,9 +354,10 @@
   .wish-cover
     border-top-left-radius: 30px
     border-top-right-radius: 30px
-    width: 100%
-    aspect-ratio: 2
-    height: auto
+    height: 200px
+    width: auto
+    margin-left: auto
+    margin-right: auto
 
   .corset
     height: 0
@@ -568,6 +601,15 @@
           <input id="searchbox-text" style="color: {itemURL === '' || itemURL === undefined ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
           <input type="submit" style="display: none" />
         </form>
+      </div>
+    </div>
+  {/if}
+
+  {#if repairing}
+    <div class="vignette searchbox" style="background-color: #190014ff">
+      <div class="center">
+        <img src="{repairingImg}" alt="Repairing your links with Price AI">
+        <h4>{statusMessage}</h4>
       </div>
     </div>
   {/if}

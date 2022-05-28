@@ -2,7 +2,7 @@
 	"name": "wishlily.app",
 	"version": "0.0.1",
 	"scripts": {
-    "dev": "./startall.sh",
+		"dev": "./startall.sh",
 		"devreal": "svelte-kit dev",
 		"build": "svelte-kit build",
 		"package": "svelte-kit package",
@@ -34,6 +34,7 @@
 	"type": "module",
 	"dependencies": {
 		"buffer": "^6.0.3",
-		"sass": "^1.50.1"
+		"sass": "^1.50.1",
+		"svelte-qr": "^1.0.0"
 	}
 }

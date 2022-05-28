@@ -10,9 +10,9 @@
 
     const stuff = window.location.hash.slice(1).split('/')
 
-    window.localStorage.setItem('encryptionKey', stuff[0])
+    window.localStorage.setItem('userId', stuff[0])
     window.localStorage.setItem('userKey', stuff[1])
-    window.localStorage.setItem('userId', stuff[2])
+    window.localStorage.setItem('encryptionKey', stuff[2])
 
     goto('/dashboard')
   })
