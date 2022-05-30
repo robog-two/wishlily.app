@@ -358,7 +358,8 @@
     margin-bottom: 30px
 
   .wish-cover
-    height: 200px
+    height: 180px
+    margin-top: 5px
     width: auto
     margin-left: auto
     margin-right: auto
@@ -510,11 +511,13 @@
       <div class="wishes-container">
         {#each wishlist as wish}
           <div class="wish" style="color: black">
-            <div class="corset">
-              <a href="{wish.link}" class="cover-link">
-                <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(wish.cover)}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
-              </a>
-            </div>
+            {#if wish.cover}
+              <div class="corset">
+                <a href="{wish.link}" class="cover-link">
+                  <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(wish.cover)}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
+                </a>
+              </div>
+            {/if}
             <div class="corset">
               <div class="floaty-tags">
                 {#if isLoggedIn}
@@ -545,7 +548,11 @@
                 {/if}
               </div>
             </div>
-            <div class="padder"></div>
+            {#if wish.cover}
+              <div class="padder"></div>
+            {:else}
+              <br/>
+            {/if}
             <a class="wish-title" href="{wish.link}">
               {wish.title}
             </a>
