@@ -226,7 +226,7 @@
     // Then, re-cache the wishlist
     reloadWishlist(false)
     // and tell our friends
-    socket?.send(`${wishlistId},${userId}|reload`)
+    socket?.send(JSON.stringify({ wishlistId, userId, action: 'reload' }))
   }
 
   async function deleteProduct(productId) {
@@ -254,7 +254,7 @@
     statusMessage = undefined
     // Reload without cache & tell our friends
     reloadWishlist(false)
-    socket?.send(`${wishlistId},${userId}|reload`)
+    socket?.send(JSON.stringify({ wishlistId, userId, action: 'reload' }))
     return false
   }
 
