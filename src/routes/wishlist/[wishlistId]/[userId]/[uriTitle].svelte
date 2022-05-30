@@ -75,6 +75,7 @@
   let cancelSearch: Function | undefined = undefined
   let cache: Cache
   let socket: WebSocket
+  let devicePixelRatio = 1
 
   onMount(async () => {
     isLoggedIn = (userId === await window.localStorage.getItem('userId'))
@@ -86,27 +87,32 @@
     decryptWishlistInfo()
     cache = await window.caches?.open('wishlily_cache')
 
+    devicePixelRatio = window.devicePixelRatio || 1
+
     // Open a websocket to refresh any changes made on another device
     socket = new WebSocket(`${await domain('db-ws')}/product-update-websocket`)
     socket.addEventListener('open', () => {
-      socket.send(`${wishlistId},${userId}|register`)
+      socket.send(JSON.stringify({action: 'register', wishlistId, userId}))
+      wishlist.forEach(wish => {
+        socket.send(JSON.stringify({action: 'upgrade', wishlistId, userId, wishId: wish.id}))
+      })
     })
     socket.addEventListener('message', async (event: MessageEvent) => {
-      switch(event.data.split('|')[0]) {
+      const message = JSON.parse(event.data)
+      switch(message.action) {
         case 'reload':
           // Reload without the cache
           reloadWishlist(false)
           break;
-        case 'upgrade-begin':
-          repairing = true
-          statusMessage = '0%'
-          break;
-        case 'upgrade-percentage':
-          statusMessage = '' + event.data.split('|')[1] + '%'
-          break;
-        case 'upgrade-finish':
-          repairing = false
-          statusMessage = undefined
+        case 'replace-embed':
+          // Replace the embed with the new one
+          const embed = message.embed
+          for (let i = 0; i < wishlist.length; i++) {
+            if (wishlist[i].id === embed.id) {
+              wishlist[i] = embed
+              break;
+            }
+          }
           break;
       }
     })
@@ -352,12 +358,18 @@
     margin-bottom: 30px
 
   .wish-cover
-    border-top-left-radius: 30px
-    border-top-right-radius: 30px
     height: 200px
     width: auto
     margin-left: auto
     margin-right: auto
+    display: block
+
+  .cover-link
+    overflow: hidden
+    border-top-left-radius: 30px
+    border-top-right-radius: 30px
+    width: 100%
+    display: block
 
   .corset
     height: 0
@@ -499,8 +511,8 @@
         {#each wishlist as wish}
           <div class="wish" style="color: black">
             <div class="corset">
-              <a href="{wish.link}">
-                <img class="wish-cover" src="{wish.cover}" alt="{wish.title}" />
+              <a href="{wish.link}" class="cover-link">
+                <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(wish.cover)}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
               </a>
             </div>
             <div class="corset">
