@@ -120,7 +120,7 @@
 
   async function decryptWishlistInfo() {
     title = await decrypt(realTitle)
-    address = (address === undefined) ? undefined : await decrypt(address)
+    address = (address == undefined) ? undefined : await decrypt(address)
     addressDecrypted = true
   }
 
@@ -151,7 +151,7 @@
     wishlist = (await dbResponse.clone().json()).reverse()
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
-    if (cached === undefined) {
+    if (cached == undefined) {
       cache.put(cacheName, dbResponse)
     }
   }
@@ -271,7 +271,7 @@
   }
 
   function needsInvert(c2: string): boolean {
-    if (c2 === undefined) return false
+    if (c2 == undefined) return false
     const c = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(c2);
     const shade = (parseInt(c[1],16)+parseInt(c[2], 16)+parseInt(c[3], 16))/3
 
@@ -480,7 +480,7 @@
 </style>
 
 <div style="color: {needsInvert(color) ? 'white' : 'black'}; background-color: {color}" class="wrapper">
-  <div class="center" style="{searchResults !== undefined ? 'display: none' : ''}">
+  <div class="center" style="{searchResults != undefined ? 'display: none' : ''}">
     {#if statusMessage}
       <span class="floaty-status">{(() => {
         const scopy = statusMessage
@@ -617,7 +617,7 @@
       <div class="center">
         <form on:submit|preventDefault="{addProduct}">
           <span>Paste link or type search.</span>
-          <input id="searchbox-text" style="color: {itemURL === '' || itemURL === undefined ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
+          <input id="searchbox-text" style="color: {!itemURL ? '#c2c2c2' : 'white'}" bind:value="{itemURL}" class="searchbox-text" placeholder="I wish for..." />
           <input type="submit" style="display: none" />
         </form>
       </div>

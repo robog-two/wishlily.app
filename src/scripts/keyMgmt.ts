@@ -4,7 +4,7 @@ import { Buffer } from 'buffer/index.js'
 export function checkLogin() {
   prefetch('/login')
 
-  if (window.localStorage.getItem('encryptionKey') === undefined || window.localStorage.getItem('userKey') === undefined || window.localStorage.getItem('userId') === undefined || window.localStorage.getItem('encryptionKey') === null || window.localStorage.getItem('userKey') === null || window.localStorage.getItem('userId') === null) {
+  if (window.localStorage.getItem('encryptionKey') == undefined || window.localStorage.getItem('userKey') == undefined || window.localStorage.getItem('userId') == undefined) {
     goto(`/login#${encodeURIComponent(window.location.href)}`)
   } else {
     window.location.hash = window.localStorage.getItem('encryptionKey')
@@ -14,7 +14,7 @@ export function checkLogin() {
 async function getKey(): Promise<CryptoKey> {
   const keyBase64 = window.location.hash ?? window.localStorage.getItem('encryptionKey')
 
-  if (keyBase64 === null) {
+  if (keyBase64 == undefined) {
     goto(`/login#${encodeURIComponent(window.location.href)}`)
     throw new Error('Unable to load encryption keys.')
   }

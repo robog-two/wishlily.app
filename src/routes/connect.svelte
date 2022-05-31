@@ -25,7 +25,7 @@
 
 <h1>DO NOT GIVE THIS TO ANYONE.</h1>
 <h2>This QR code allows anyone to login to your account at any time.<br/>It is for your use only.</h2>
-{#if userId !== undefined && userKey !== undefined  && encryptionKey !== undefined }
+{#if userId != undefined && userKey != undefined  && encryptionKey != undefined }
   <div class="qr-code">
     <QR text="/user/import/#{userId}/{userKey}/{encryptionKey}" level="H" />
   </div>

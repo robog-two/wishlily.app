@@ -81,7 +81,7 @@ import { domain } from '../scripts/isdev';
     statusMessage = undefined
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
-    if (cached === undefined) {
+    if (cached == undefined) {
       cache.put(cacheName, dbResponse)
     }
   }
@@ -110,7 +110,7 @@ import { domain } from '../scripts/isdev';
       userKey: window.localStorage.getItem('userKey'),
       title: await encrypt(tempListName),
       color: tempListColor,
-      address: tempListAddress === undefined ? undefined : await encrypt(tempListAddress)
+      address: tempListAddress == undefined ? undefined : await encrypt(tempListAddress)
     }
 
     if (tempEditingId) {
@@ -140,7 +140,7 @@ import { domain } from '../scripts/isdev';
       return
     }
 
-    if (tempEditingId === undefined) {
+    if (tempEditingId == undefined) {
       // Once we've saved the wishlist to DB, it's valid to use as a link! We don't need to wait until reload.
       wishlists.push((await dbResponse.json()).wishlist)
     }
@@ -151,7 +151,7 @@ import { domain } from '../scripts/isdev';
   }
 
   function incrPage() {
-    if (addPage === 1 && listName === undefined) {
+    if (addPage === 1 && listName == undefined) {
       statusMessage = 'You must name your list.'
     }
 
@@ -159,7 +159,7 @@ import { domain } from '../scripts/isdev';
       statusMessage = 'You must select a color.'
     }
 
-    if ((addPage !== 1 || listName) && (addPage !== 3 || (listColor && listColor !== '#000000'))) {
+    if ((addPage != 1 || listName) && (addPage != 3 || (listColor && listColor != '#000000'))) {
       addPage++
       const checkExist = setInterval(async () => {
         const textbox = (document.getElementById('searchbox-text') as HTMLInputElement)

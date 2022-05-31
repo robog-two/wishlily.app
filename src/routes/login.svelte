@@ -31,7 +31,7 @@
 
       let userKey: string = ''
 
-      if (window.crypto?.getRandomValues !== undefined) {
+      if (window.crypto?.getRandomValues != undefined) {
         let values: Uint32Array = new Uint32Array(30);
         await window.crypto.getRandomValues(values)
         for (let value of values) {
@@ -41,7 +41,7 @@
         userKey = await (await fetch('/user/shims/key')).text()
       }
 
-      let userId = window.crypto.randomUUID !== undefined ? await window.crypto?.randomUUID() : await (await fetch('/user/shims/uuid')).text()
+      let userId = window.crypto.randomUUID != undefined ? await window.crypto?.randomUUID() : await (await fetch('/user/shims/uuid')).text()
 
       message = 'Logging in...'
 
