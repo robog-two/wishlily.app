@@ -78,10 +78,10 @@
   let devicePixelRatio = 1
 
   onMount(async () => {
-    isLoggedIn = (userId === await window.localStorage.getItem('userId'))
+    isLoggedIn = (userId === window.localStorage.getItem('userId'))
 
     if (isLoggedIn) {
-      await checkLogin()
+      checkLogin()
     }
 
     decryptWishlistInfo()
