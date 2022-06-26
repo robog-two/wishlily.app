@@ -550,9 +550,9 @@
     {#if totalPrice}
       <div class="total-price">
         <div class="floaty-tags">
+          <span>${totalPrice.dollars}.{totalPrice.cents < 10 ? '0' : ''}{totalPrice.cents}</span>
           <!-- TODO: Instead of just "subtotal", see if the price has risen/dropped since last visit -->
           <span>Subtotal</span>
-          <span>${totalPrice.dollars}.{totalPrice.cents}</span>
         </div>
       </div>
     {/if}
