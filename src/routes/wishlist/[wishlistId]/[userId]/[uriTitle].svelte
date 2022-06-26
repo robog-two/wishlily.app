@@ -95,9 +95,9 @@
     socket = new WebSocket(`${await domain('db-ws')}/product-update-websocket`)
     socket.addEventListener('open', () => {
       socket.send(JSON.stringify({action: 'register', wishlistId, userId}))
-      wishlist.forEach(wish => {
-        socket.send(JSON.stringify({action: 'upgrade', wishlistId, userId, wishId: wish.id}))
-      })
+      // wishlist.forEach(wish => {
+      //   socket.send(JSON.stringify({action: 'upgrade', wishlistId, userId, wishId: wish.id}))
+      // })
     })
     socket.addEventListener('message', async (event: MessageEvent) => {
       const message = JSON.parse(event.data)
