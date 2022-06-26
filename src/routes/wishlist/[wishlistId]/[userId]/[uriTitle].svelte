@@ -85,7 +85,8 @@
       checkLogin()
     }
 
-    decryptWishlistInfo().then(() => {updateTotalPrice()})
+    updateTotalPrice()
+    decryptWishlistInfo()
     cache = await window.caches?.open('wishlily_cache')
 
     devicePixelRatio = window.devicePixelRatio || 1
@@ -181,6 +182,7 @@
       return
     }
     wishlist = (await dbResponse.clone().json()).reverse()
+    updateTotalPrice()
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
     if (cached == undefined) {
