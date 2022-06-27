@@ -15,7 +15,7 @@
 
   <h3>Okay, whatever. Just leave me alone please.</h3>
 
-  <p>If you'd like our servers to leave you alone, simply block Mathilda's user agent in your robots.txt and we'll remove your embeds in around 24 hours:<p>
+  <p>If you'd like our servers to leave you alone, simply add these lines to your robots.txt and we'll remove your embeds in around 24 hours:<p>
 
   <div class="code">
     User-Agent: Mathilda
