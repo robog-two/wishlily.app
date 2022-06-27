@@ -191,13 +191,14 @@
   }
 
   async function search(query: string): Promise<any> {
-    const productResponse = await fetch(`${await domain('mathilda')}/generic/search?q=${encodeURIComponent(query)}`)
-    if (productResponse.status < 200 || productResponse.status >= 400) {
-      statusMessage = 'Error parsing search results.'
-      console.log(await productResponse.json())
-      return
-    }
-    searchResults = (await productResponse.json()).message
+    // const productResponse = await fetch(`${await domain('mathilda')}/generic/search?q=${encodeURIComponent(query)}`)
+    // if (productResponse.status < 200 || productResponse.status >= 400) {
+    //   statusMessage = 'Error parsing search results.'
+    //   console.log(await productResponse.json())
+    //   return
+    // }
+    // searchResults = (await productResponse.json()).message
+    searchResults = []
     statusMessage = undefined
 
     return new Promise((resolve, reject) => {
@@ -625,7 +626,9 @@
   {#if searchResults}
     <div class="vignette" style="background-color: {color}f3" on:click|self="{cancelSearch()}">
       <div class="center" on:click|self="{cancelSearch()}">
-      <span class="search-instructions">Touch an item to add.</span>
+        <h2>That's unfortunate.</h2>
+        <span>Search results are disabled while we update our systems to be more compliant and friendly with other websites. Don't worry, you can still add links as normal and use an external search engine. Sorry for the inconvenience.</span>
+      <!-- <span class="search-instructions">Touch an item to add.</span>
       {#each searchResults as result}
         <div class="wish" style="color: black">
           <div class="corset">
@@ -659,7 +662,7 @@
             {result.title}
           </p>
         </div>
-      {/each}
+      {/each}-->
       </div>
     </div>
   {:else if addingItem}
