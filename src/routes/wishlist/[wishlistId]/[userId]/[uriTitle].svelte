@@ -316,6 +316,20 @@
       return true
     }
   }
+
+  function resolveImage(base: string, image: string) {
+    try {
+      new URL(image)
+      return image
+    } catch (_) {
+      try {
+        return `${new URL(base).origin}${image}`
+      } catch (e) {
+        console.log(e)
+        return 'https://wishlily.app/favicon.png'
+      }
+    }
+  }
 </script>
 
 <svelte:head>
@@ -565,7 +579,7 @@
             {#if wish.cover}
               <div class="corset">
                 <a href="{wish.link}" class="cover-link">
-                  <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(wish.cover)}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
+                  <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(resolveImage(wish.link, wish.cover))}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
                 </a>
               </div>
             {/if}
