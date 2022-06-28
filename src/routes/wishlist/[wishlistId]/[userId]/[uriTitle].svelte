@@ -330,6 +330,31 @@
       }
     }
   }
+
+  interface Embed {
+    title: string
+    cover: string | undefined
+    price: string | undefined
+  }
+
+  async function getEmbed(link): Promise<Embed> {
+    const embed = await (await fetch(`${await domain('db')}/get_embed`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Origin': 'https://wishlily.app'
+      },
+      body: JSON.stringify({
+        link
+      })
+    })).json()
+
+    if (!embed.title) {
+      embed.title = link
+    }
+
+    return embed
+  }
 </script>
 
 <svelte:head>
@@ -418,6 +443,7 @@
     overflow: hidden
     border-top-left-radius: 30px
     border-top-right-radius: 30px
+    height: 180px
     width: 100%
     display: block
 
@@ -532,6 +558,24 @@
 
   .wishes-container
     margin-top: 20px
+
+  @keyframes loading-animation
+    0%
+      background-position-x: -100vw
+
+    100%
+      background-position-x: 100vw
+
+  .loading-animation
+    animation: loading-animation 5s infinite linear
+    background: rgb(255,255,255)
+    background: linear-gradient(90deg, rgba(255,255,255,1) 0%, rgba(240,240,240,1) 50%, rgba(255,255,255,1) 100%)
+
+  .fake-text-line
+    margin: 5px
+    border-radius: 20px
+    height: 20px
+    width: calc(100% - 10px)
 </style>
 
 <div style="color: {needsInvert(color) ? 'white' : 'black'}; background-color: {color}" class="wrapper">
@@ -575,53 +619,73 @@
     {#if wishlist && wishlist.length > 0}
       <div class="wishes-container">
         {#each wishlist as wish}
-          <div class="wish" style="color: black">
-            {#if wish.cover}
+          {#await getEmbed(wish.link)}
+            <div class="wish" style="color: black">
               <div class="corset">
-                <a href="{wish.link}" class="cover-link">
-                  <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(resolveImage(wish.link, wish.cover))}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{wish.title}" />
-                </a>
+                <span class="cover-link">
+                  <div class="wish-cover" />
+                </span>
               </div>
-            {/if}
-            <div class="corset">
-              <div class="floaty-tags">
-                {#if isLoggedIn}
-                  <span on:click="{() => {deleteProduct(wish.id)}}">
-                    <img class="delete-icon" src={deleteIcon} alt="Delete"/>
-                  </span>
-                {/if}
-                {#if wish.price}
-                  <span>{wish.price}</span>
-                {/if}
-                {#if wish?.link?.includes('amazon.com')}
-                  <span>Amazon</span>
-                {/if}
-                {#if wish?.link?.includes('etsy.com')}
-                  <span>Etsy</span>
-                {/if}
-                {#if wish?.link?.includes('target.com')}
-                  <span>Target</span>
-                {/if}
-                {#if wish?.link?.includes('walmart.com')}
-                  <span>Walmart</span>
-                {/if}
-                {#if wish?.link?.includes('barnesandnoble.com')}
-                  <span>Barnes & Noble</span>
-                {/if}
-                {#if wish?.link?.includes('bestbuy.com')}
-                  <span>Best Buy</span>
-                {/if}
-              </div>
-            </div>
-            {#if wish.cover}
-              <div class="padder"></div>
-            {:else}
+              <a href="{wish.link}">
+                <div class="padder loading-animation"></div>
+              </a>
               <br/>
-            {/if}
-            <a class="wish-title" href="{wish.link}">
-              {wish.title}
-            </a>
-          </div>
+              <a class="wish-title" href="{wish.link}">
+                <div class="fake-text-line loading-animation"></div>
+                <div class="fake-text-line loading-animation"></div>
+              </a>
+            </div>
+          {:then embed}
+            <div class="wish" style="color: black">
+              {#if embed.cover}
+                <div class="corset">
+                  <span class="cover-link">
+                    <img class="wish-cover" src="https://imagecdn.app/v2/image/{encodeURIComponent(resolveImage(wish.link, embed.cover))}?height={200 * devicePixelRatio}&format=webp&fit=inside" alt="{embed.title}" />
+                  </span>
+                </div>
+              {/if}
+              <div class="corset">
+                <div class="floaty-tags">
+                  {#if isLoggedIn}
+                    <span on:click="{() => {deleteProduct(wish.id)}}">
+                      <img class="delete-icon" src={deleteIcon} alt="Delete"/>
+                    </span>
+                  {/if}
+                  {#if embed.price}
+                    <span>{embed.price}</span>
+                  {/if}
+                  {#if wish?.link?.includes('amazon.com')}
+                    <span>Amazon</span>
+                  {/if}
+                  {#if wish?.link?.includes('etsy.com')}
+                    <span>Etsy</span>
+                  {/if}
+                  {#if wish?.link?.includes('target.com')}
+                    <span>Target</span>
+                  {/if}
+                  {#if wish?.link?.includes('walmart.com')}
+                    <span>Walmart</span>
+                  {/if}
+                  {#if wish?.link?.includes('barnesandnoble.com')}
+                    <span>Barnes & Noble</span>
+                  {/if}
+                  {#if wish?.link?.includes('bestbuy.com')}
+                    <span>Best Buy</span>
+                  {/if}
+                </div>
+              </div>
+              {#if embed.cover}
+                <a href="{wish.link}">
+                  <div class="padder"></div>
+                </a>
+              {:else}
+                <br/>
+              {/if}
+              <a class="wish-title" href="{wish.link}">
+                {embed.title}
+              </a>
+            </div>
+          {/await}
         {/each}
       </div>
     {:else}
