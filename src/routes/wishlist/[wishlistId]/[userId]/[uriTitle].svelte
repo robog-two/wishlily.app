@@ -626,11 +626,11 @@
                   <div class="wish-cover" />
                 </span>
               </div>
-              <a href="{wish.link}">
+              <a href="{wish.link}" target="_blank">
                 <div class="padder loading-animation"></div>
               </a>
               <br/>
-              <a class="wish-title" href="{wish.link}">
+              <a class="wish-title" href="{wish.link}" target="_blank">
                 <div class="fake-text-line loading-animation"></div>
                 <div class="fake-text-line loading-animation"></div>
               </a>
@@ -675,13 +675,13 @@
                 </div>
               </div>
               {#if embed.cover}
-                <a href="{wish.link}">
+                <a href="{wish.link}" target="_blank">
                   <div class="padder"></div>
                 </a>
               {:else}
                 <br/>
               {/if}
-              <a class="wish-title" href="{wish.link}">
+              <a class="wish-title" href="{wish.link}" target="_blank">
                 {embed.title}
               </a>
             </div>
