@@ -64,7 +64,6 @@
 
   const titleEmbed = decodeURIComponent($page.url.searchParams.get('s'))
 
-  let totalPrice: Price | undefined = undefined
   let itemURL = ''
   let addressDecrypted = false
   let isLoggedIn = false
@@ -85,7 +84,6 @@
       checkLogin()
     }
 
-    updateTotalPrice()
     decryptWishlistInfo()
     cache = await window.caches?.open('wishlily_cache')
 
@@ -115,7 +113,6 @@
               break;
             }
           }
-          updateTotalPrice()
           break;
       }
     })
@@ -124,31 +121,6 @@
   interface Price {
     dollars: number,
     cents: number
-  }
-
-  async function updateTotalPrice() {
-    let newTotalPrice: Price = { dollars: 0, cents: 0 }
-
-    wishlist.forEach(wish => {
-      const price = wish.price
-      if (price) {
-        try {
-        const dollars = parseInt(wish.price.match(/.*?([0-9]+?)\..*/)[1])
-        const cents = parseInt(wish.price.match(/.*?\.([0-9]+).*/)[1])
-        newTotalPrice.dollars += dollars
-        newTotalPrice.cents += cents
-        } catch (e) {
-          // This probably just means that whatever Mathilda gave us wasn't a price.
-          // which is fine, we'll just ignore it. Subtotals aren't exact in nature.
-          console.log('Error extracting dollars/cents from price')
-          console.log(e)
-        }
-      }
-    })
-
-    newTotalPrice.dollars += Math.floor(newTotalPrice.cents / 100.0)
-    newTotalPrice.cents = newTotalPrice.cents % 100
-    totalPrice = newTotalPrice
   }
 
   async function decryptWishlistInfo() {
@@ -182,7 +154,6 @@
       return
     }
     wishlist = (await dbResponse.clone().json()).reverse()
-    updateTotalPrice()
 
     // If the cache wasn't there, or we were forced to load it anew, store it!
     if (cached == undefined) {
@@ -604,16 +575,6 @@
       {:else}
         <h3 class="address">Decrypting...</h3>
       {/if}
-    {/if}
-
-    {#if totalPrice}
-      <div class="total-price">
-        <div class="floaty-tags">
-          <span>${totalPrice.dollars}.{totalPrice.cents < 10 ? '0' : ''}{totalPrice.cents}</span>
-          <!-- TODO: Instead of just "subtotal", see if the price has risen/dropped since last visit -->
-          <span>Subtotal</span>
-        </div>
-      </div>
     {/if}
 
     {#if wishlist && wishlist.length > 0}
