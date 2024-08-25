@@ -13,10 +13,10 @@
 
   onMount(async () => {
     if (window.location.hash !== '#no-auto-login') {
-      prefetch('/login')
-      if (window.localStorage.getItem('userId')) {
-        goto('/login')
-      }
+      goto('/login')
+      //if (window.localStorage.getItem('userId')) {
+      //  goto('/login')
+      //}
     }
 
     const logInterval = setInterval(() => {
